@@ -1,4 +1,4 @@
 # Game List
-Corn Hole
-Disc Golf
-Eucher
+- Corn Hole
+- Disc Golf
+- Eucher
