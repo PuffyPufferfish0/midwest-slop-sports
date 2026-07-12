@@ -13,6 +13,11 @@ script = ExtResource("1_o5qli")
 
 [node name="Level" type="Node3D" parent="." unique_id=1784503674]
 
+[node name="CSGBox3D" type="CSGBox3D" parent="Level" unique_id=136818045]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.6738114, 0)
+use_collision = true
+size = Vector3(50, 1, 50)
+
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="." unique_id=1112869420]
 _spawnable_scenes = PackedStringArray("uid://cpn1tjwwxr82b")
 spawn_path = NodePath("../Level")
