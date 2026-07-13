@@ -8,29 +8,23 @@ extends StaticBody3D
 var player_1 = null
 var player_2 = null
 
-func get_interact_prompt():
-	if player_1 == null or player_2 == null:
-		return " 'E' [Join Game] "
-	else:
-		return " Game Full "
 
-func interact(player):
+func join_game(player, seat_number):
 	var target_seat = null
 	var target_cam_pos = null
 	
-	if player_1 == null:
+	if seat_number == 1 and player_1 == null:
 		target_seat = seat_pos_1
 		target_cam_pos = cam_pos_1
 		player_1 = player
 		print("Player joined as Player 1!")
-	elif player_2 == null:
+	elif seat_number == 2 and player_2 == null:
 		target_seat = seat_pos_2
 		target_cam_pos = cam_pos_2
 		player_2 = player
 		print("Player joined as Player 2!")
 	else:
-		return 
-		
+		return		
 	player.global_position = target_seat.global_position
 	player.global_rotation = target_seat.global_rotation
 	

@@ -18,13 +18,17 @@ var current_station = null
 @onready var interact_ray = $InteractRay
 @onready var interact_prompt = $InteractPrompt
 @onready var quit_popup = $CanvasLayer/QuitMinigamePopup
+@onready var crosshair = $CanvasLayer/Crosshair
 
 func _enter_tree():
 	set_multiplayer_authority(str(name).to_int())
 
 func _ready():
 	if not is_multiplayer_authority():
+		$CanvasLayer.hide() 
 		return
+		
+	camera.current = true
 
 func _input(event):
 	if not is_multiplayer_authority():
@@ -54,6 +58,8 @@ func _process(_delta):
 	
 	if is_playing_minigame:
 		interact_prompt.visible = false
+		if crosshair:
+			crosshair.visible = false
 		
 		if Input.is_action_just_pressed("ui_cancel"):
 			quit_popup.visible = true
@@ -105,17 +111,28 @@ func _on_yes_button_pressed():
 	
 	is_playing_minigame = false
 	
-	global_position += global_transform.basis.z * 1.5 + Vector3(0, 0.2, 0)
+	if crosshair:
+		crosshair.visible = true 
+	
+	rotation = Vector3.ZERO
+	
+	var nudge_distance = 1.5
+	if current_station and current_station.player_2 == self:
+		nudge_distance = -1.5
+		
+	global_position += global_transform.basis.z * nudge_distance + Vector3(0, 0.2, 0)
 	
 	$CollisionShape3D.disabled = false
 	spring_arm.collision_mask = 1
 	
-	camera.reparent(spring_arm, false)
-	camera.position = Vector3.ZERO
-	camera.rotation = Vector3.ZERO
+	if camera.get_parent() != spring_arm:
+		camera.reparent(spring_arm, false)
+	
+	camera.transform = Transform3D()
 	
 	if current_station:
-		current_station.remove_player(self)
+		if current_station.has_method("remove_player"):
+			current_station.remove_player(self)
 		current_station = null
 
 func _on_no_button_pressed():
