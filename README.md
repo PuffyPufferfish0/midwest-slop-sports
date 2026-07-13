@@ -2,16 +2,6 @@
 - Corn Hole
 - Disc Golf
 - Eucher
-dedicated ptp app
-global leader boards
-vector art
-lobby (club penguin)
+- Beers!
 
-beers
-
-android support
-*IOS*
-*webapp*
-	- webgl
-
-
+![gif1](midwestslop1.gif)
