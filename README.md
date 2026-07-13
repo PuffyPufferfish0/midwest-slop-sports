@@ -5,3 +5,5 @@
 - Beers!
 
 ![gif1](midwestslop1.gif)
+![gif2](midwestslop2.gif)
+
