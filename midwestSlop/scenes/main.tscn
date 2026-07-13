@@ -9,6 +9,7 @@
 [ext_resource type="Script" uid="uid://2juaclm8gc1n" path="res://addons/simplegrasstextured/grass.gd" id="6_85g3d"]
 [ext_resource type="Texture2D" uid="uid://c43xtjr0npep0" path="res://0066-white-painted-wood-fence-texture-seamless.jpg" id="8_tipki"]
 [ext_resource type="PackedScene" uid="uid://lbh8e00a0x3x" path="res://house.tscn" id="9_85g3d"]
+[ext_resource type="PackedScene" uid="uid://ckvm2quqo3u1p" path="res://picnic_table.fbx" id="9_choun"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_a8gtg"]
 albedo_texture = ExtResource("2_tbgi4")
@@ -126,6 +127,13 @@ sgt_tool_shape = {
 metadata/_custom_type_script = "uid://2juaclm8gc1n"
 metadata/SimpleGrassTextured = "2.0.5"
 
+[node name="picnic_table" parent="Level" unique_id=146590266 instance=ExtResource("9_choun")]
+transform = Transform3D(3.5, 0, 0, 0, 3.5, 0, 0, 0, 3.5, -0.1972568, -1.8563013, -15.451376)
+
+[node name="House" parent="Level" unique_id=1232587246 instance=ExtResource("9_85g3d")]
+process_physics_priority = 1
+transform = Transform3D(3.0145202, 0, -2.629196, 0, 4, 0, 2.629196, 0, 3.0145202, 20.428234, -2, -20.324144)
+
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="." unique_id=1112869420]
 _spawnable_scenes = PackedStringArray("uid://cpn1tjwwxr82b")
 spawn_path = NodePath("../Level")
@@ -145,7 +153,3 @@ offset_top = 227.0
 offset_right = 458.0
 offset_bottom = 258.0
 text = "Join Game"
-
-[node name="House" parent="." unique_id=1232587246 instance=ExtResource("9_85g3d")]
-process_physics_priority = 1
-transform = Transform3D(3.0145202, 0, -2.629196, 0, 4, 0, 2.629196, 0, 3.0145202, 20.428234, -2, -20.324144)
