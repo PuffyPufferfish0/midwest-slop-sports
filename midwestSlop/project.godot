@@ -36,7 +36,7 @@ Shortcuts/density_decrement=Object(Shortcut,"resource_local_to_scene":false,"res
 
 config/name="midwestSlop"
 run/main_scene="uid://cuknnttm8u6ew"
-config/features=PackedStringArray("4.7", "Forward Plus")
+config/features=PackedStringArray("4.6", "Forward Plus")
 config/icon="res://icon.svg"
 
 [autoload]
@@ -86,6 +86,8 @@ move_right={
 [rendering]
 
 rendering_device/driver.windows="d3d12"
+renderer/rendering_method="gl_compatibility"
+renderer/rendering_method.mobile="gl_compatibility"
 
 [shader_globals]
 
