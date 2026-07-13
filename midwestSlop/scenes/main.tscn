@@ -12,6 +12,7 @@
 [ext_resource type="PackedScene" uid="uid://ckvm2quqo3u1p" path="res://picnic_table.fbx" id="9_choun"]
 [ext_resource type="PackedScene" uid="uid://8vky5axm8nww" path="res://discGolf.fbx" id="11_ya4ey"]
 [ext_resource type="PackedScene" uid="uid://bp5qdhf3mft5e" path="res://basic_beach_cooler.glb" id="12_eb6dy"]
+[ext_resource type="ArrayMesh" uid="uid://dd5i7edjohro" path="res://cards/blank_card.obj" id="13_trceg"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_a8gtg"]
 albedo_texture = ExtResource("2_tbgi4")
@@ -37,7 +38,7 @@ albedo_texture = ExtResource("8_tipki")
 uv1_scale = Vector3(0.2, 0.2, 0.2)
 uv1_triplanar = true
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_eb6dy"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_a8y0u"]
 render_priority = 0
 shader = ExtResource("3_tefeu")
 shader_parameter/albedo = Color(1, 1, 1, 1)
@@ -108,7 +109,7 @@ size = Vector3(50, 4, 50)
 material = SubResource("StandardMaterial3D_85g3d")
 
 [node name="SimpleGrassTextured" type="MultiMeshInstance3D" parent="Level" unique_id=1059472916]
-material_override = SubResource("ShaderMaterial_eb6dy")
+material_override = SubResource("ShaderMaterial_a8y0u")
 multimesh = SubResource("MultiMesh_choun")
 script = ExtResource("6_85g3d")
 roughness = 0.32
@@ -149,6 +150,14 @@ transform = Transform3D(-0.50714684, 0, -1.9346324, 0, 2, 0, 1.9346324, 0, -0.50
 
 [node name="cooler" parent="Level" unique_id=1437859629 instance=ExtResource("12_eb6dy")]
 transform = Transform3D(0.006251697, 0, -0.5999674, 0, 0.6, 0, 0.5999674, 0, 0.006251697, -3.0221715, -1.4907694, -15.058662)
+
+[node name="BlankCard" type="MeshInstance3D" parent="Level" unique_id=1664569405]
+transform = Transform3D(0.028106868, 0, -0.09596876, 0, 0.10808775, 0, 0.09596876, 0, 0.028106868, -2.137758, -0.033686288, -15.069053)
+mesh = ExtResource("13_trceg")
+
+[node name="BlankCard2" type="MeshInstance3D" parent="Level" unique_id=138685396]
+transform = Transform3D(-0.004075961, 0, -0.09991689, 0, 0.10808775, 0, 0.09991689, 0, -0.004075961, -1.2955744, -0.033686288, -15.069053)
+mesh = ExtResource("13_trceg")
 
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="." unique_id=1112869420]
 _spawnable_scenes = PackedStringArray("uid://cpn1tjwwxr82b")

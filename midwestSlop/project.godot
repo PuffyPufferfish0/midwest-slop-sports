@@ -52,6 +52,10 @@ window/stretch/aspect="expand"
 
 enabled=PackedStringArray("res://addons/simplegrasstextured/plugin.cfg")
 
+[filesystem]
+
+import/blender/enabled=false
+
 [input]
 
 move_forward={
