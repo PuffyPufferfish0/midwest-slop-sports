@@ -132,11 +132,33 @@ _data = {
 &"Take 001": SubResource("Animation_llse4")
 }
 
+[sub_resource type="FontFile" id="FontFile_o8df6"]
+cache/0/variation_coordinates = {}
+cache/0/face_index = 0
+cache/0/embolden = 0.0
+cache/0/transform = Transform2D(1, 0, 0, 1, 0, 0)
+cache/0/spacing_top = 0
+cache/0/spacing_bottom = 0
+cache/0/spacing_space = 0
+cache/0/spacing_glyph = 0
+cache/0/baseline_offset = 0.0
+cache/0/16/0/ascent = 0.0
+cache/0/16/0/descent = 0.0
+cache/0/16/0/underline_position = 0.0
+cache/0/16/0/underline_thickness = 0.0
+cache/0/16/0/scale = 1.0
+
+[sub_resource type="Theme" id="Theme_krsjj"]
+default_base_scale = 0.22
+default_font = SubResource("FontFile_o8df6")
+
 [node name="Main" type="Control" unique_id=550988766]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_top = 4.0
+offset_bottom = 4.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_o5qli")
@@ -288,9 +310,9 @@ spawn_path = NodePath("../Level")
 [node name="UI" type="CanvasLayer" parent="." unique_id=615988839]
 
 [node name="HostButton" type="Button" parent="UI" unique_id=440979215]
-offset_left = 478.0
+offset_left = 476.0
 offset_top = 227.0
-offset_right = 643.0
+offset_right = 641.0
 offset_bottom = 258.0
 text = "Host Game"
 
@@ -300,6 +322,17 @@ offset_top = 227.0
 offset_right = 458.0
 offset_bottom = 258.0
 text = "Join Game"
+
+[node name="Node2D" type="Node2D" parent="UI" unique_id=202940167]
+position = Vector2(483, 153)
+
+[node name="Label" type="Label" parent="UI/Node2D" unique_id=79609698]
+offset_left = -160.0
+offset_top = -44.0
+offset_right = 63.0
+offset_bottom = 9.0
+theme = SubResource("Theme_krsjj")
+text = "ijfweioufh"
 
 [node name="Sketchfab_Scene" parent="." unique_id=2047914891 instance=ExtResource("18_dp3eg")]
 transform = Transform3D(0.01, 0, 0, 0, 0.01, 0, 0, 0, 0.01, 1.4716475, -0.15131342, -15.37973)

@@ -1,0 +1,132 @@
+[gd_scene format=3 uid="uid://cpn1tjwwxr82b"]
+
+[ext_resource type="Script" uid="uid://b07mgq75wm88y" path="res://scenes/player.gd" id="1_3vyb7"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_2282s"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_2282s"]
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_u8vuu"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath(".:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+
+[node name="Player" type="CharacterBody3D" unique_id=410094248]
+script = ExtResource("1_3vyb7")
+
+[node name="SpringArm3D" type="SpringArm3D" parent="." unique_id=1416095292]
+spring_length = 4.4
+
+[node name="Camera3D" type="Camera3D" parent="SpringArm3D" unique_id=1144225699]
+
+[node name="InteractRay" type="RayCast3D" parent="." unique_id=912847950]
+target_position = Vector3(0, 0, -3)
+
+[node name="InteractPrompt" type="Label" parent="." unique_id=553355472]
+visible = false
+offset_left = 509.0
+offset_top = 236.0
+offset_right = 612.0
+offset_bottom = 259.0
+theme_override_colors/font_color = Color(0.95319396, 1, 0.5688713, 1)
+text = "[E] Join Game"
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=443338296]
+mesh = SubResource("CapsuleMesh_2282s")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1402311229]
+shape = SubResource("CapsuleShape3D_2282s")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=517099598]
+replication_config = SubResource("SceneReplicationConfig_u8vuu")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=944272804]
+
+[node name="QuitMinigamePopup" type="Panel" parent="CanvasLayer" unique_id=1395752715]
+visible = false
+offset_left = 544.0
+offset_top = 275.0
+offset_right = 584.0
+offset_bottom = 315.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/QuitMinigamePopup" unique_id=1331868279]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="YesButton" type="Button" parent="CanvasLayer/QuitMinigamePopup/HBoxContainer" unique_id=770649791]
+layout_mode = 2
+text = "Yes"
+
+[node name="NoButton" type="Button" parent="CanvasLayer/QuitMinigamePopup/HBoxContainer" unique_id=443021795]
+layout_mode = 2
+text = "No"
+
+[node name="areyousure" type="Label" parent="CanvasLayer/QuitMinigamePopup" unique_id=1767048372]
+modulate = Color(0, 0, 0, 1)
+layout_mode = 0
+offset_left = -69.0
+offset_top = -29.0
+offset_right = 164.0
+offset_bottom = -6.0
+text = "are you sure you want to exit?"
+
+[node name="Crosshair" type="ColorRect" parent="CanvasLayer" unique_id=1183141828]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_top = -143.99995
+offset_right = 4.0
+offset_bottom = -139.99995
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="InventoryPopup" type="Panel" parent="CanvasLayer" unique_id=620484754]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -250.0
+offset_top = -150.0
+offset_right = 250.0
+offset_bottom = 150.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TabContainer" type="TabContainer" parent="CanvasLayer/InventoryPopup" unique_id=827936167]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -103.0
+offset_right = 103.0
+offset_bottom = 31.0
+grow_horizontal = 2
+current_tab = 0
+
+[node name="Cards" type="Control" parent="CanvasLayer/InventoryPopup/TabContainer" unique_id=536047030]
+layout_mode = 2
+metadata/_tab_index = 0
+
+[node name="Vanity" type="Control" parent="CanvasLayer/InventoryPopup/TabContainer" unique_id=1251381439]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 1
+
+[node name="skins" type="Control" parent="CanvasLayer/InventoryPopup/TabContainer" unique_id=1041898105]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 2
+
+[connection signal="pressed" from="CanvasLayer/QuitMinigamePopup/HBoxContainer/YesButton" to="." method="_on_yes_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/QuitMinigamePopup/HBoxContainer/NoButton" to="." method="_on_no_button_pressed"]
