@@ -12,7 +12,9 @@ var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
 var is_right_clicking: bool = false
 var is_playing_minigame: bool = false
 var current_station = null
+var is_inventory_open: bool = false
 
+@onready var inventory_popup = $CanvasLayer/InventoryPopup
 @onready var spring_arm = $SpringArm3D
 @onready var camera = $SpringArm3D/Camera3D
 @onready var interact_ray = $InteractRay
@@ -29,11 +31,29 @@ func _ready():
 		return
 		
 	camera.current = true
+	inventory_popup.visible = false
 
 func _input(event):
 	if not is_multiplayer_authority():
 		return
 
+	if event is InputEventKey and event.physical_keycode == KEY_F and event.pressed and not event.echo:
+		if is_playing_minigame:
+			return
+			
+		is_inventory_open = !is_inventory_open
+		inventory_popup.visible = is_inventory_open
+		
+		if is_inventory_open:
+			Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+			if crosshair: crosshair.visible = false
+		else:
+			Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+			if crosshair: crosshair.visible = true
+
+	if is_inventory_open:
+		return
+	
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT:
 		is_right_clicking = event.pressed
 		if is_right_clicking:
@@ -84,8 +104,8 @@ func _physics_process(delta):
 	if not is_multiplayer_authority():
 		return
 
-	if is_playing_minigame:
-		return 
+	if is_playing_minigame or is_inventory_open:
+		return
 
 	if not is_on_floor():
 		velocity.y -= gravity * delta
