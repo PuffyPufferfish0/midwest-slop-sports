@@ -19,9 +19,17 @@
 [ext_resource type="PackedScene" uid="uid://cq76ge8rihlxq" path="res://star_effect_low_poly_transparency(1).glb" id="16_jbj1t"]
 [ext_resource type="PackedScene" uid="uid://b8o8ruma2tfyl" path="res://scenes/beer_bottle.glb" id="18_dp3eg"]
 [ext_resource type="FontFile" uid="uid://n7kfygqx0lj" path="res://beachday.otf" id="18_gqmmt"]
+[ext_resource type="PackedScene" uid="uid://cvl8gh6e2g1kc" path="res://wooden_table.glb" id="18_y6deb"]
 [ext_resource type="PackedScene" uid="uid://cargtfsxqcgb" path="res://scenes/d1_prodigy_disc_golf_disc.glb" id="19_0ld40"]
+[ext_resource type="PackedScene" uid="uid://ch45gie4snxmj" path="res://cigar_ashtray_used.glb" id="19_og1vs"]
 [ext_resource type="AudioStream" uid="uid://n14j6r3jxvhy" path="res://Me, Myself and Emory.mp3" id="19_yc10j"]
 [ext_resource type="Script" uid="uid://bdr2bc5x6xl8a" path="res://cameraPan.gd" id="20_jscy8"]
+[ext_resource type="PackedScene" uid="uid://dw8n6w1pnokmh" path="res://vintage_1984_samsung_bt-123aj_portable_5_2k.glb" id="22_og1vs"]
+[ext_resource type="Script" uid="uid://dapbs4u86c883" path="res://scenes/radio_tv.gd" id="23_2wyq8"]
+[ext_resource type="PackedScene" uid="uid://j55ekowduwjs" path="res://projector_screen_low_poly.glb" id="24_2f3dj"]
+[ext_resource type="Script" uid="uid://1qrybe52e77j" path="res://scenes/mesh_instance_3d.gd" id="25_fv21b"]
+[ext_resource type="Texture2D" uid="uid://dd5ca4e87erov" path="res://wooden_table_0.png" id="25_yq6so"]
+[ext_resource type="PackedScene" uid="uid://iur7cmqxtufr" path="res://xiaomi_wanbo_projector_t2_max.glb" id="29_yq6so"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_a8gtg"]
 albedo_texture = ExtResource("2_tbgi4")
@@ -135,6 +143,26 @@ _data = {
 &"Take 001": SubResource("Animation_llse4")
 }
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_vxglm"]
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_2f3dj"]
+viewport_path = NodePath("Level/radio/RadioTV/SubViewport")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_yq6so"]
+resource_local_to_scene = true
+albedo_texture = SubResource("ViewportTexture_2f3dj")
+
+[sub_resource type="QuadMesh" id="QuadMesh_fv21b"]
+resource_local_to_scene = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_tel4y"]
+
+[sub_resource type="QuadMesh" id="QuadMesh_qkpxi"]
+resource_local_to_scene = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fv21b"]
+albedo_texture = ExtResource("25_yq6so")
+
 [node name="Main" type="Control" unique_id=550988766]
 layout_mode = 3
 anchors_preset = 15
@@ -231,7 +259,7 @@ script = ExtResource("10_muem4")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.45702386, 0)
 shape = SubResource("SphereShape3D_dp3eg")
 
-[node name="glowyBall_2" parent="Level/picnic_table/picnic_table/StaticBody3D/SeatClicker1" unique_id=449823213 instance=ExtResource("16_jbj1t")]
+[node name="glowyBall_2" parent="Level/picnic_table/picnic_table/StaticBody3D/SeatClicker1" unique_id=840934076 instance=ExtResource("16_jbj1t")]
 transform = Transform3D(0.84248656, 0, 0, 0, 0, -0.77690893, 0, 0.3798741, 0, -0.004816562, -0.45445418, -0.014917642)
 
 [node name="SeatClicker2" type="StaticBody3D" parent="Level/picnic_table/picnic_table/StaticBody3D" unique_id=1912503563]
@@ -243,7 +271,7 @@ seat_number = 2
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.45702386, 0)
 shape = SubResource("SphereShape3D_dp3eg")
 
-[node name="glowyBall_2" parent="Level/picnic_table/picnic_table/StaticBody3D/SeatClicker2" unique_id=793279871 instance=ExtResource("16_jbj1t")]
+[node name="glowyBall_2" parent="Level/picnic_table/picnic_table/StaticBody3D/SeatClicker2" unique_id=1528003931 instance=ExtResource("16_jbj1t")]
 transform = Transform3D(0.84248656, 0, 0, 0, 0, -0.77690893, 0, 0.3798741, 0, -0.004816562, -0.45445418, -0.014917642)
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Level/picnic_table" unique_id=1912034963]
@@ -253,16 +281,16 @@ libraries/ = SubResource("AnimationLibrary_8634g")
 process_physics_priority = 1
 transform = Transform3D(3.0145202, 0, -2.629196, 0, 4, 0, 2.629196, 0, 3.0145202, 20.428234, -2, -20.324144)
 
-[node name="discGolf" parent="Level" unique_id=1530077421 instance=ExtResource("11_ya4ey")]
+[node name="discGolf" parent="Level" unique_id=713443673 instance=ExtResource("11_ya4ey")]
 transform = Transform3D(1.7793413, 0, 0.9132056, 0, 2, 0, -0.9132056, 0, 1.7793413, -15.086454, 0.08728552, -17.65634)
 
-[node name="discGolf2" parent="Level" unique_id=1263454109 instance=ExtResource("11_ya4ey")]
+[node name="discGolf2" parent="Level" unique_id=866938270 instance=ExtResource("11_ya4ey")]
 transform = Transform3D(-1.8451726, 0, 0.7715815, 0, 2, 0, -0.7715815, 0, -1.8451726, -17.697126, 0.08728552, 11.831423)
 
-[node name="discGolf3" parent="Level" unique_id=2141660876 instance=ExtResource("11_ya4ey")]
+[node name="discGolf3" parent="Level" unique_id=1955382397 instance=ExtResource("11_ya4ey")]
 transform = Transform3D(-0.50714684, 0, -1.9346324, 0, 2, 0, 1.9346324, 0, -0.50714684, 17.655262, 0.08728552, 16.417917)
 
-[node name="cooler" parent="Level" unique_id=1437859629 instance=ExtResource("12_eb6dy")]
+[node name="cooler" parent="Level" unique_id=1127574761 instance=ExtResource("12_eb6dy")]
 transform = Transform3D(-0.24691813, 0, -0.5468376, 0, 0.6, 0, 0.5468376, 0, -0.24691813, 7.054894, -3.2405417, -10.818874)
 
 [node name="BlankCard" type="MeshInstance3D" parent="Level" unique_id=1664569405]
@@ -287,6 +315,97 @@ transform = Transform3D(-0.9999254, 0, 0.012217015, 0, 1, 0, -0.012217015, 0, -0
 
 [node name="SpawnPoint" type="Marker3D" parent="Level" unique_id=1399855853]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6.089984, 0)
+
+[node name="woodenTable" parent="Level" unique_id=459677729 instance=ExtResource("18_y6deb")]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 21.37538, -0.42877227, -7.8845177)
+
+[node name="Ashtray" parent="Level/woodenTable" unique_id=1999951188 instance=ExtResource("19_og1vs")]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, -0.16529179, 0.7549584, -0.120909214)
+
+[node name="beer2" parent="Level/woodenTable" unique_id=983628432 instance=ExtResource("18_dp3eg")]
+transform = Transform3D(0.00087545894, 0, -0.00492276, 0, 0.005, 0, 0.00492276, 0, 0.00087545894, 0.011609077, 0.719735, -0.17628336)
+
+[node name="beer" parent="Level" unique_id=2047914891 instance=ExtResource("18_dp3eg")]
+transform = Transform3D(0.01, 0, 0, 0, 0.01, 0, 0, 0, 0.01, 1.4716475, -0.15131342, -15.37973)
+
+[node name="disc" parent="Level" unique_id=1502440843 instance=ExtResource("19_0ld40")]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, -4.733681, 0.9952549, -14.244762)
+
+[node name="radio" parent="Level" unique_id=619534406 instance=ExtResource("22_og1vs")]
+transform = Transform3D(-1.5580205, 0, -2.563703, 0, 3, 0, 2.563703, 0, -1.5580205, 21.555773, 1.1037056, -7.3574715)
+
+[node name="RadioTV" type="StaticBody3D" parent="Level/radio" unique_id=2089590193]
+script = ExtResource("23_2wyq8")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Level/radio/RadioTV" unique_id=537189864]
+transform = Transform3D(0.45, 0, 0, 0, 0.45, 0, 0, 0, 0.45, 0, 0, 0)
+shape = SubResource("BoxShape3D_vxglm")
+
+[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="Level/radio/RadioTV" unique_id=1755774925]
+
+[node name="SubViewport" type="SubViewport" parent="Level/radio/RadioTV" unique_id=423898403]
+size = Vector2i(1024, 768)
+
+[node name="VideoStreamPlayer" type="VideoStreamPlayer" parent="Level/radio/RadioTV/SubViewport" unique_id=1878429353]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+expand = true
+
+[node name="ColorRect" type="ColorRect" parent="Level/radio/RadioTV/SubViewport" unique_id=732169305]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -512.0
+offset_top = -384.0
+offset_right = 512.0
+offset_bottom = 384.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="Label" type="Label" parent="Level/radio/RadioTV/SubViewport/ColorRect" unique_id=2010533648]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 100
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Level/radio/RadioTV" unique_id=983737593]
+transform = Transform3D(0.15332806, 0, -1.7881393e-07, 0, 0.124982886, 0, 5.2154064e-08, 0, 0.6656904, -0.16033983, 0.12647426, 0.14578152)
+material_override = SubResource("StandardMaterial3D_yq6so")
+mesh = SubResource("QuadMesh_fv21b")
+
+[node name="ProjectorScreen" parent="Level" unique_id=571089220 instance=ExtResource("24_2f3dj")]
+transform = Transform3D(-6.556708e-08, 0, 1.5, 0, 1.5, 0, -1.5, 0, -6.556708e-08, -0.25842556, 3.8613584, 23.99039)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Level/ProjectorScreen" unique_id=236103940 node_paths=PackedStringArray("source_viewport")]
+transform = Transform3D(-4.8181005e-07, 0, 2.4617076, 0, 6.2668133, 0, -11.022525, 0, -1.07604635e-07, 0.003917694, 0.12689757, 0)
+material_override = SubResource("StandardMaterial3D_tel4y")
+mesh = SubResource("QuadMesh_qkpxi")
+script = ExtResource("25_fv21b")
+source_viewport = NodePath("../../radio/RadioTV/SubViewport")
+
+[node name="topwoodScreen" type="CSGBox3D" parent="Level" unique_id=1208214430]
+transform = Transform3D(17.235783, 0, 0, 0, 0.39999998, 0, 0, 0, 0.5, -0.23355103, 9.645228, 24.078302)
+material = SubResource("StandardMaterial3D_fv21b")
+
+[node name="leftwoodScreen" type="CSGBox3D" parent="Level" unique_id=607305668]
+transform = Transform3D(-7.534e-07, -0.39999998, 0, 17.235783, -1.7484554e-08, 0, 0, 0, 0.5, 8.578537, 1.2859421, 24.078302)
+material = SubResource("StandardMaterial3D_fv21b")
+
+[node name="rightwoodScreen" type="CSGBox3D" parent="Level" unique_id=1095239220]
+transform = Transform3D(-7.534e-07, -0.39999998, 0, 17.235783, -1.7484554e-08, 0, 0, 0, 0.5, -9.022732, 1.2859421, 24.078302)
+material = SubResource("StandardMaterial3D_fv21b")
 
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="." unique_id=1112869420]
 _spawnable_scenes = PackedStringArray("uid://cpn1tjwwxr82b")
@@ -347,8 +466,5 @@ fov = 85.61928
 script = ExtResource("20_jscy8")
 rotation_speed = 0.1
 
-[node name="Sketchfab_Scene" parent="." unique_id=2047914891 instance=ExtResource("18_dp3eg")]
-transform = Transform3D(0.01, 0, 0, 0, 0.01, 0, 0, 0, 0.01, 1.4716475, -0.15131342, -15.37973)
-
-[node name="Sketchfab_Scene2" parent="." unique_id=1502440843 instance=ExtResource("19_0ld40")]
-transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, -4.733681, 0.9952549, -14.244762)
+[node name="projector" parent="." unique_id=862564385 instance=ExtResource("29_yq6so")]
+transform = Transform3D(-0.5, 0, -4.371139e-08, 0, 0.5, 0, 4.371139e-08, 0, -0.5, -0.35802633, -1.854075, 13.140497)

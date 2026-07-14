@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://c1hq6sd0ilwdu"
+path="res://.godot/imported/King Gizzard & the Lizard Wizard - Flying Microtonal Banana - 01 - Rattlesnake.mp3-f21615808e5cfbf54a16c1833b924d03.mp3str"
+
+[deps]
+
+source_file="res://music/King Gizzard & the Lizard Wizard - Flying Microtonal Banana - 01 - Rattlesnake.mp3"
+dest_files=["res://.godot/imported/King Gizzard & the Lizard Wizard - Flying Microtonal Banana - 01 - Rattlesnake.mp3-f21615808e5cfbf54a16c1833b924d03.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

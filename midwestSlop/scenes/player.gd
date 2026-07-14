@@ -8,12 +8,15 @@ const MIN_ZOOM = 1.0
 const MAX_ZOOM = 5.0
 
 var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
-
 var is_right_clicking: bool = false
 var is_playing_minigame: bool = false
 var current_station = null
 var is_inventory_open: bool = false
+var current_radio = null
+var is_media_menu_open: bool = false
 
+@onready var media_popup = $CanvasLayer/MediaPopup
+@onready var song_list = $CanvasLayer/MediaPopup/ScrollContainer/VBoxContainer
 @onready var inventory_popup = $CanvasLayer/InventoryPopup
 @onready var spring_arm = $SpringArm3D
 @onready var camera = $SpringArm3D/Camera3D
@@ -30,15 +33,38 @@ func _ready():
 		$CanvasLayer.hide() 
 		return
 		
+	var close_btn = find_child("CloseMediaButton", true, false)
+	if close_btn and not close_btn.pressed.is_connected(close_media_menu):
+		close_btn.pressed.connect(close_media_menu)
+		
 	camera.current = true
 	inventory_popup.visible = false
+	media_popup.visible = false
+	
+	var stop_btn = find_child("StopButton", true, false)
+	if stop_btn and not stop_btn.pressed.is_connected(_on_stop_pressed):
+		stop_btn.pressed.connect(_on_stop_pressed)
+		
+	var vol_slider = find_child("VolumeSlider", true, false)
+	if vol_slider and not vol_slider.value_changed.is_connected(_on_volume_changed):
+		vol_slider.value_changed.connect(_on_volume_changed)
 
 func _input(event):
 	if not is_multiplayer_authority():
 		return
 
+	if event is InputEventKey and event.physical_keycode == KEY_M and event.pressed and not event.echo:
+		if is_playing_minigame or is_inventory_open:
+			return
+			
+		if is_media_menu_open:
+			close_media_menu()
+		else:
+			open_media_menu()
+
+	# Toggle Inventory with 'F'
 	if event is InputEventKey and event.physical_keycode == KEY_F and event.pressed and not event.echo:
-		if is_playing_minigame:
+		if is_playing_minigame or is_media_menu_open:
 			return
 			
 		is_inventory_open = !is_inventory_open
@@ -51,7 +77,7 @@ func _input(event):
 			Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 			if crosshair: crosshair.visible = true
 
-	if is_inventory_open:
+	if is_inventory_open or is_media_menu_open:
 		return
 	
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT:
@@ -74,6 +100,12 @@ func _input(event):
 
 func _process(_delta):
 	if not is_multiplayer_authority(): 
+		return
+	
+	if is_media_menu_open:
+		interact_prompt.visible = false
+		if Input.is_action_just_pressed("ui_cancel"):
+			close_media_menu()
 		return
 	
 	if is_playing_minigame:
@@ -104,7 +136,7 @@ func _physics_process(delta):
 	if not is_multiplayer_authority():
 		return
 
-	if is_playing_minigame or is_inventory_open:
+	if is_playing_minigame or is_inventory_open or is_media_menu_open:
 		return
 
 	if not is_on_floor():
@@ -124,6 +156,73 @@ func _physics_process(delta):
 		velocity.z = move_toward(velocity.z, 0, SPEED)
 
 	move_and_slide()
+
+
+# --- MEDIA MENU FUNCTIONS ---
+
+func open_media_menu(radio_node = null):
+	if radio_node:
+		current_radio = radio_node
+	elif current_radio == null:
+		current_radio = get_tree().root.find_child("RadioTV", true, false)
+		
+	is_media_menu_open = true
+	media_popup.visible = true
+	
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	if crosshair: crosshair.visible = false
+	
+	populate_song_list()
+
+func close_media_menu():
+	is_media_menu_open = false
+	media_popup.visible = false
+	current_radio = null
+	
+	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	if crosshair: crosshair.visible = true
+
+func populate_song_list():
+	for child in song_list.get_children():
+		if child.name != "CloseMediaButton":
+			child.queue_free()
+			
+	var added_songs = []
+	
+	var dir = DirAccess.open("res://music")
+	if dir:
+		dir.list_dir_begin()
+		var file_name = dir.get_next()
+		
+		while file_name != "":
+			if not dir.current_is_dir():
+				if file_name.ends_with(".mp3") or file_name.ends_with(".ogv"):
+					var clean_name = file_name.replace(".import", "")
+					
+					if not added_songs.has(clean_name):
+						added_songs.append(clean_name)
+						var btn = Button.new()
+						btn.text = clean_name
+						btn.pressed.connect(_on_song_selected.bind(clean_name))
+						song_list.add_child(btn)
+			file_name = dir.get_next()
+
+func _on_song_selected(file_name: String):
+	if current_radio and current_radio.has_method("play_media"):
+		# Send the full path to the radio node to play it globally
+		current_radio.play_media("res://music/" + file_name)
+	close_media_menu()
+
+func _on_stop_pressed():
+	if current_radio and current_radio.has_method("stop_media"):
+		current_radio.stop_media()
+
+func _on_volume_changed(value: float):
+	if current_radio and current_radio.has_method("set_volume"):
+		current_radio.set_volume(value)
+
+
+# --- MINIGAME EXIT FUNCTIONS ---
 
 func _on_yes_button_pressed():
 	quit_popup.visible = false

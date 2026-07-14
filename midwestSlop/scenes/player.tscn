@@ -128,5 +128,64 @@ visible = false
 layout_mode = 2
 metadata/_tab_index = 2
 
+[node name="MediaPopup" type="Panel" parent="CanvasLayer" unique_id=1284220994]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -251.5
+offset_top = -152.0
+offset_right = 251.5
+offset_bottom = 152.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="CanvasLayer/MediaPopup" unique_id=379321448]
+layout_mode = 0
+offset_right = 503.5
+offset_bottom = 249.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/MediaPopup/ScrollContainer" unique_id=830349503]
+layout_mode = 2
+
+[node name="CloseMediaButton" type="Button" parent="CanvasLayer/MediaPopup" unique_id=1681280192]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -10.0
+offset_top = -8.0
+offset_right = 10.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "Close
+"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/MediaPopup" unique_id=1509826425]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -57.0
+offset_bottom = -7.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="StopButton" type="Button" parent="CanvasLayer/MediaPopup/HBoxContainer" unique_id=527546601]
+layout_mode = 2
+text = "Stop Playback
+"
+
+[node name="VolumeSlider" type="HSlider" parent="CanvasLayer/MediaPopup/HBoxContainer" unique_id=107680544]
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 1.0
+step = 0.05
+value = 1.0
+
 [connection signal="pressed" from="CanvasLayer/QuitMinigamePopup/HBoxContainer/YesButton" to="." method="_on_yes_button_pressed"]
 [connection signal="pressed" from="CanvasLayer/QuitMinigamePopup/HBoxContainer/NoButton" to="." method="_on_no_button_pressed"]
