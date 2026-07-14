@@ -90,5 +90,43 @@ grow_vertical = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
+[node name="InventoryPopup" type="Panel" parent="CanvasLayer" unique_id=620484754]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -250.0
+offset_top = -150.0
+offset_right = 250.0
+offset_bottom = 150.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TabContainer" type="TabContainer" parent="CanvasLayer/InventoryPopup" unique_id=827936167]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -103.0
+offset_right = 103.0
+offset_bottom = 31.0
+grow_horizontal = 2
+current_tab = 0
+
+[node name="Cards" type="Control" parent="CanvasLayer/InventoryPopup/TabContainer" unique_id=536047030]
+layout_mode = 2
+metadata/_tab_index = 0
+
+[node name="Vanity" type="Control" parent="CanvasLayer/InventoryPopup/TabContainer" unique_id=1251381439]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 1
+
+[node name="skins" type="Control" parent="CanvasLayer/InventoryPopup/TabContainer" unique_id=1041898105]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 2
+
 [connection signal="pressed" from="CanvasLayer/QuitMinigamePopup/HBoxContainer/YesButton" to="." method="_on_yes_button_pressed"]
 [connection signal="pressed" from="CanvasLayer/QuitMinigamePopup/HBoxContainer/NoButton" to="." method="_on_no_button_pressed"]
