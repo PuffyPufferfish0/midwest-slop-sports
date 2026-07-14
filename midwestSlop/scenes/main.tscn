@@ -17,6 +17,8 @@
 [ext_resource type="PackedScene" uid="uid://dp0b6fx8ui7yi" path="res://cards/cornhole.glb" id="14_a8y0u"]
 [ext_resource type="PackedScene" uid="uid://qo47b38boigf" path="res://cards/cornLegs.glb" id="14_jkv2x"]
 [ext_resource type="PackedScene" uid="uid://cq76ge8rihlxq" path="res://star_effect_low_poly_transparency(1).glb" id="16_jbj1t"]
+[ext_resource type="PackedScene" uid="uid://b8o8ruma2tfyl" path="res://scenes/beer_bottle.glb" id="18_dp3eg"]
+[ext_resource type="PackedScene" uid="uid://cargtfsxqcgb" path="res://scenes/d1_prodigy_disc_golf_disc.glb" id="19_0ld40"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_a8gtg"]
 albedo_texture = ExtResource("2_tbgi4")
@@ -42,7 +44,7 @@ albedo_texture = ExtResource("8_tipki")
 uv1_scale = Vector3(0.2, 0.2, 0.2)
 uv1_triplanar = true
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_muem4"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_0ld40"]
 render_priority = 0
 shader = ExtResource("3_tefeu")
 shader_parameter/albedo = Color(1, 1, 1, 1)
@@ -167,7 +169,7 @@ size = Vector3(50, 4, 50)
 material = SubResource("StandardMaterial3D_85g3d")
 
 [node name="SimpleGrassTextured" type="MultiMeshInstance3D" parent="Level" unique_id=1059472916]
-material_override = SubResource("ShaderMaterial_muem4")
+material_override = SubResource("ShaderMaterial_0ld40")
 multimesh = SubResource("MultiMesh_jkv2x")
 script = ExtResource("6_85g3d")
 roughness = 0.32
@@ -298,3 +300,9 @@ offset_top = 227.0
 offset_right = 458.0
 offset_bottom = 258.0
 text = "Join Game"
+
+[node name="Sketchfab_Scene" parent="." unique_id=2047914891 instance=ExtResource("18_dp3eg")]
+transform = Transform3D(0.01, 0, 0, 0, 0.01, 0, 0, 0, 0.01, 1.4716475, -0.15131342, -15.37973)
+
+[node name="Sketchfab_Scene2" parent="." unique_id=1502440843 instance=ExtResource("19_0ld40")]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, -1.726489, 0.9952549, -14.244762)
