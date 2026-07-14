@@ -1,5 +1,0 @@
-[gd_scene format=3 uid="uid://c3y5cdtix0ya0"]
-
-[ext_resource type="PackedScene" uid="uid://ckvm2quqo3u1p" path="res://picnic_table.fbx" id="1_4ylcr"]
-
-[node name="picnic_table" unique_id=974762108 instance=ExtResource("1_4ylcr")]

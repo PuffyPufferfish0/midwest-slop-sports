@@ -47,7 +47,7 @@ albedo_texture = ExtResource("8_tipki")
 uv1_scale = Vector3(0.2, 0.2, 0.2)
 uv1_triplanar = true
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_0ld40"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_jscy8"]
 render_priority = 0
 shader = ExtResource("3_tefeu")
 shader_parameter/albedo = Color(1, 1, 1, 1)
@@ -176,7 +176,7 @@ size = Vector3(50, 4, 50)
 material = SubResource("StandardMaterial3D_85g3d")
 
 [node name="SimpleGrassTextured" type="MultiMeshInstance3D" parent="Level" unique_id=1059472916]
-material_override = SubResource("ShaderMaterial_0ld40")
+material_override = SubResource("ShaderMaterial_jscy8")
 multimesh = SubResource("MultiMesh_jkv2x")
 script = ExtResource("6_85g3d")
 roughness = 0.32
@@ -301,10 +301,17 @@ position = Vector2(569, 298)
 scale = Vector2(0.96666765, 1)
 
 [node name="MainMenuLabel" type="RichTextLabel" parent="MainMenu/CanvasLayer/Node2D" unique_id=964357265]
-offset_left = -176.0
-offset_top = -39.0
-offset_right = 140.0
-offset_bottom = 18.0
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -158.0
+offset_top = -28.5
+offset_right = 158.0
+offset_bottom = 28.5
+grow_horizontal = 2
+grow_vertical = 2
 theme_override_fonts/normal_font = ExtResource("18_gqmmt")
 theme_override_fonts/bold_font = ExtResource("18_gqmmt")
 theme_override_font_sizes/normal_font_size = 45
