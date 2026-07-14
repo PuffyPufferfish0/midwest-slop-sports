@@ -36,7 +36,7 @@ Shortcuts/density_decrement=Object(Shortcut,"resource_local_to_scene":false,"res
 
 config/name="midwestSlop"
 run/main_scene="uid://cuknnttm8u6ew"
-config/features=PackedStringArray("4.6", "Forward Plus")
+config/features=PackedStringArray("4.7", "Forward Plus")
 config/icon="res://icon.svg"
 
 [autoload]
