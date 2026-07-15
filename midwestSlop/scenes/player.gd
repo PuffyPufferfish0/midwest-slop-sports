@@ -16,6 +16,22 @@ var current_radio = null
 var is_media_menu_open: bool = false
 var is_notebook_open: bool = false
 
+var bottle_caps: int = 0
+var beer_cooldown_timer: float = 0.0
+var base_beer_cooldown: float = 5.0 #seconds
+var cooldown_multiplier: float = 1.0
+var notification_id: int = 0
+
+var is_wager_menu_open: bool = false
+var proposed_wager: int = 0
+var opponent_wager: int = 0
+var opponent_peer_id: int = 0
+var wager_locked_in: bool = false
+
+@onready var wager_popup = $CanvasLayer/WagerPopup
+@onready var wager_input = $CanvasLayer/WagerPopup/VBoxContainer/WagerInput
+@onready var wager_status = $CanvasLayer/WagerPopup/VBoxContainer/StatusLabel
+@onready var notification_label = $CanvasLayer/NotificationLabel
 @onready var media_popup = $CanvasLayer/MediaPopup
 @onready var song_list = $CanvasLayer/MediaPopup/ScrollContainer/VBoxContainer
 @onready var inventory_popup = $CanvasLayer/InventoryPopup
@@ -26,6 +42,7 @@ var is_notebook_open: bool = false
 @onready var interact_prompt = $InteractPrompt
 @onready var quit_popup = $CanvasLayer/QuitMinigamePopup
 @onready var crosshair = $CanvasLayer/Crosshair
+@onready var caps_label = $CanvasLayer/InventoryPopup/CapsLabel
 
 func _enter_tree():
 	set_multiplayer_authority(str(name).to_int())
@@ -40,7 +57,6 @@ func _ready():
 	media_popup.visible = false
 	notebook_popup.visible = false
 	
-	# Connect Media UI
 	var close_btn = find_child("CloseMediaButton", true, false)
 	if close_btn and not close_btn.pressed.is_connected(close_media_menu):
 		close_btn.pressed.connect(close_media_menu)
@@ -53,31 +69,39 @@ func _ready():
 	if vol_slider and not vol_slider.value_changed.is_connected(_on_volume_changed):
 		vol_slider.value_changed.connect(_on_volume_changed)
 		
-	# Connect Notebook UI
 	var close_notebook_btn = find_child("CloseNotebookButton", true, false)
 	if close_notebook_btn and not close_notebook_btn.pressed.is_connected(close_notebook):
 		close_notebook_btn.pressed.connect(close_notebook)
+	
+	wager_popup.visible = false
+	
+	var propose_btn = find_child("ProposeButton", true, false)
+	if propose_btn and not propose_btn.pressed.is_connected(_on_propose_pressed):
+		propose_btn.pressed.connect(_on_propose_pressed)
+		
+	var accept_btn = find_child("AcceptButton", true, false)
+	if accept_btn and not accept_btn.pressed.is_connected(_on_accept_pressed):
+		accept_btn.pressed.connect(_on_accept_pressed)
 
 func _input(event):
 	if not is_multiplayer_authority():
 		return
 
-	# Toggle Media Menu with 'M'
 	if event is InputEventKey and event.physical_keycode == KEY_M and event.pressed and not event.echo:
 		if is_playing_minigame or is_inventory_open or is_notebook_open:
-			return # Don't open if busy
+			return
 			
 		if is_media_menu_open:
 			close_media_menu()
 		else:
 			open_media_menu()
 
-	# Toggle Inventory with 'F'
 	if event is InputEventKey and event.physical_keycode == KEY_F and event.pressed and not event.echo:
 		if is_playing_minigame or is_media_menu_open or is_notebook_open:
 			return
 			
 		is_inventory_open = !is_inventory_open
+		update_caps_display()
 		inventory_popup.visible = is_inventory_open
 		
 		if is_inventory_open:
@@ -87,7 +111,14 @@ func _input(event):
 			Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 			if crosshair: crosshair.visible = true
 
-	# Block the camera from moving if ANY menu is open
+	if event is InputEventKey and event.physical_keycode == KEY_E and event.pressed and not event.echo:
+		if is_playing_minigame or is_inventory_open or is_media_menu_open or is_notebook_open:
+			return 
+			
+		if interact_ray.is_colliding():
+			var target = interact_ray.get_collider()
+			if target.has_method("interact"):
+				target.interact(self)
 	if is_inventory_open or is_media_menu_open or is_notebook_open:
 		return
 	
@@ -112,6 +143,8 @@ func _input(event):
 func _process(_delta):
 	if not is_multiplayer_authority(): 
 		return
+	if beer_cooldown_timer > 0:
+		beer_cooldown_timer -= _delta
 	
 	if is_notebook_open:
 		interact_prompt.visible = false
@@ -141,9 +174,6 @@ func _process(_delta):
 		if target.has_method("get_interact_prompt"):
 			interact_prompt.text = target.get_interact_prompt()
 			interact_prompt.visible = true
-			
-			if Input.is_physical_key_pressed(KEY_E):
-				target.interact(self)
 		else:
 			interact_prompt.visible = false
 	else:
@@ -290,3 +320,119 @@ func _on_yes_button_pressed():
 func _on_no_button_pressed():
 	quit_popup.visible = false
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+
+# --- ECONOMY FUNCTIONS ---
+
+# --- ECONOMY FUNCTIONS ---
+
+func drink_beer():
+	if beer_cooldown_timer <= 0:
+		bottle_caps += 1
+		beer_cooldown_timer = base_beer_cooldown * cooldown_multiplier
+		show_notification("Drank beer! Total Caps: " + str(bottle_caps))
+		update_caps_display()
+		return true
+	else:
+		var time_left = int(beer_cooldown_timer)
+		show_notification("Why drink 2 at once, party animal?? Cooldown: " + str(time_left) + " seconds remaining")
+		return false
+
+func update_caps_display():
+	if caps_label:
+		caps_label.text = "Caps: " + str(bottle_caps)
+
+
+func show_notification(message: String):
+	notification_label.text = message
+	notification_label.visible = true
+	
+	notification_id += 1
+	var current_id = notification_id
+	
+	await get_tree().create_timer(3.0).timeout
+	
+	if notification_id == current_id:
+		notification_label.visible = false
+
+
+func open_wager_menu(target_opponent_id: int):
+	opponent_peer_id = target_opponent_id
+	is_wager_menu_open = true
+	wager_popup.visible = true
+	wager_locked_in = false
+	
+	wager_input.text = ""
+	wager_input.editable = true
+	wager_status.text = "Waiting for input..."
+	find_child("AcceptButton").disabled = true
+	find_child("ProposeButton").disabled = false
+	
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	if crosshair: crosshair.visible = false
+
+func close_wager_menu():
+	is_wager_menu_open = false
+	wager_popup.visible = false
+	
+	if not is_inventory_open and not is_media_menu_open and not is_notebook_open:
+		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+		if crosshair: crosshair.visible = true
+
+func _on_propose_pressed():
+	var amount = wager_input.text.to_int()
+	
+	if amount <= 0:
+		wager_status.text = "Enter a valid amount!"
+		return
+	if amount > bottle_caps:
+		wager_status.text = "Not enough caps!"
+		return
+		
+	proposed_wager = amount
+	wager_input.editable = false
+	find_child("ProposeButton").disabled = true
+	wager_status.text = "Sent proposal. Waiting for opponent..."
+	
+	rpc_id(opponent_peer_id, "receive_wager_proposal", amount, multiplayer.get_unique_id())
+
+@rpc("any_peer", "call_remote")
+func receive_wager_proposal(amount: int, sender_id: int):
+	if sender_id == opponent_peer_id:
+		opponent_wager = amount
+		wager_status.text = "Opponent bet: " + str(amount) + " caps."
+		
+		# If they bet more than we have, we can't accept
+		if amount > bottle_caps:
+			wager_status.text = "Opponent bet " + str(amount) + ". You are too broke!"
+		else:
+			find_child("AcceptButton").disabled = false
+
+func _on_accept_pressed():
+	find_child("AcceptButton").disabled = true
+	wager_status.text = "Wager Accepted! Game starting..."
+	
+	rpc_id(opponent_peer_id, "receive_wager_acceptance", multiplayer.get_unique_id())
+	
+	lock_in_escrow()
+
+@rpc("any_peer", "call_remote")
+func receive_wager_acceptance(sender_id: int):
+	if sender_id == opponent_peer_id:
+		wager_status.text = "Opponent accepted! Game starting..."
+		lock_in_escrow()
+
+func lock_in_escrow():
+	wager_locked_in = true
+	
+	var final_bet = opponent_wager if opponent_wager > 0 else proposed_wager
+	bottle_caps -= final_bet
+	update_caps_display()
+	
+	if current_station and current_station.has_method("set_prize_pool"):
+		current_station.set_prize_pool(final_bet * 2)
+		
+	await get_tree().create_timer(1.5).timeout
+	close_wager_menu()
+	
+	if current_station and current_station.has_method("start_minigame"):
+		current_station.start_minigame()
