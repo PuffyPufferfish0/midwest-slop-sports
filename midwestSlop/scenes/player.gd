@@ -14,10 +14,12 @@ var current_station = null
 var is_inventory_open: bool = false
 var current_radio = null
 var is_media_menu_open: bool = false
+var is_notebook_open: bool = false
 
 @onready var media_popup = $CanvasLayer/MediaPopup
 @onready var song_list = $CanvasLayer/MediaPopup/ScrollContainer/VBoxContainer
 @onready var inventory_popup = $CanvasLayer/InventoryPopup
+@onready var notebook_popup = $CanvasLayer/NotebookPopup
 @onready var spring_arm = $SpringArm3D
 @onready var camera = $SpringArm3D/Camera3D
 @onready var interact_ray = $InteractRay
@@ -33,14 +35,16 @@ func _ready():
 		$CanvasLayer.hide() 
 		return
 		
+	camera.current = true
+	inventory_popup.visible = false
+	media_popup.visible = false
+	notebook_popup.visible = false
+	
+	# Connect Media UI
 	var close_btn = find_child("CloseMediaButton", true, false)
 	if close_btn and not close_btn.pressed.is_connected(close_media_menu):
 		close_btn.pressed.connect(close_media_menu)
 		
-	camera.current = true
-	inventory_popup.visible = false
-	media_popup.visible = false
-	
 	var stop_btn = find_child("StopButton", true, false)
 	if stop_btn and not stop_btn.pressed.is_connected(_on_stop_pressed):
 		stop_btn.pressed.connect(_on_stop_pressed)
@@ -48,14 +52,20 @@ func _ready():
 	var vol_slider = find_child("VolumeSlider", true, false)
 	if vol_slider and not vol_slider.value_changed.is_connected(_on_volume_changed):
 		vol_slider.value_changed.connect(_on_volume_changed)
+		
+	# Connect Notebook UI
+	var close_notebook_btn = find_child("CloseNotebookButton", true, false)
+	if close_notebook_btn and not close_notebook_btn.pressed.is_connected(close_notebook):
+		close_notebook_btn.pressed.connect(close_notebook)
 
 func _input(event):
 	if not is_multiplayer_authority():
 		return
 
+	# Toggle Media Menu with 'M'
 	if event is InputEventKey and event.physical_keycode == KEY_M and event.pressed and not event.echo:
-		if is_playing_minigame or is_inventory_open:
-			return
+		if is_playing_minigame or is_inventory_open or is_notebook_open:
+			return # Don't open if busy
 			
 		if is_media_menu_open:
 			close_media_menu()
@@ -64,7 +74,7 @@ func _input(event):
 
 	# Toggle Inventory with 'F'
 	if event is InputEventKey and event.physical_keycode == KEY_F and event.pressed and not event.echo:
-		if is_playing_minigame or is_media_menu_open:
+		if is_playing_minigame or is_media_menu_open or is_notebook_open:
 			return
 			
 		is_inventory_open = !is_inventory_open
@@ -77,7 +87,8 @@ func _input(event):
 			Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 			if crosshair: crosshair.visible = true
 
-	if is_inventory_open or is_media_menu_open:
+	# Block the camera from moving if ANY menu is open
+	if is_inventory_open or is_media_menu_open or is_notebook_open:
 		return
 	
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT:
@@ -100,6 +111,12 @@ func _input(event):
 
 func _process(_delta):
 	if not is_multiplayer_authority(): 
+		return
+	
+	if is_notebook_open:
+		interact_prompt.visible = false
+		if Input.is_action_just_pressed("ui_cancel"):
+			close_notebook()
 		return
 	
 	if is_media_menu_open:
@@ -136,7 +153,8 @@ func _physics_process(delta):
 	if not is_multiplayer_authority():
 		return
 
-	if is_playing_minigame or is_inventory_open or is_media_menu_open:
+	# Lock movement if tied up in menus or games
+	if is_playing_minigame or is_inventory_open or is_media_menu_open or is_notebook_open:
 		return
 
 	if not is_on_floor():
@@ -156,6 +174,22 @@ func _physics_process(delta):
 		velocity.z = move_toward(velocity.z, 0, SPEED)
 
 	move_and_slide()
+
+# --- NOTEBOOK FUNCTIONS ---
+
+func open_notebook():
+	is_notebook_open = true
+	notebook_popup.visible = true
+	
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	if crosshair: crosshair.visible = false
+
+func close_notebook():
+	is_notebook_open = false
+	notebook_popup.visible = false
+	
+	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	if crosshair: crosshair.visible = true
 
 
 # --- MEDIA MENU FUNCTIONS ---
@@ -209,7 +243,6 @@ func populate_song_list():
 
 func _on_song_selected(file_name: String):
 	if current_radio and current_radio.has_method("play_media"):
-		# Send the full path to the radio node to play it globally
 		current_radio.play_media("res://music/" + file_name)
 	close_media_menu()
 

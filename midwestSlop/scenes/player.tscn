@@ -187,5 +187,29 @@ max_value = 1.0
 step = 0.05
 value = 1.0
 
+[node name="NotebookPopup" type="Panel" parent="CanvasLayer" unique_id=2072315565]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -250.0
+offset_top = -300.0
+offset_right = 250.0
+offset_bottom = 300.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Label" type="Label" parent="CanvasLayer/NotebookPopup" unique_id=1897823425]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+
+[node name="Button" type="Button" parent="CanvasLayer/NotebookPopup" unique_id=1101486235]
+layout_mode = 0
+offset_right = 8.0
+offset_bottom = 8.0
+text = "close"
+
 [connection signal="pressed" from="CanvasLayer/QuitMinigamePopup/HBoxContainer/YesButton" to="." method="_on_yes_button_pressed"]
 [connection signal="pressed" from="CanvasLayer/QuitMinigamePopup/HBoxContainer/NoButton" to="." method="_on_no_button_pressed"]
