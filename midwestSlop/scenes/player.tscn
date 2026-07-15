@@ -205,11 +205,52 @@ layout_mode = 0
 offset_right = 40.0
 offset_bottom = 23.0
 
-[node name="Button" type="Button" parent="CanvasLayer/NotebookPopup" unique_id=1101486235]
-layout_mode = 0
-offset_right = 8.0
-offset_bottom = 8.0
+[node name="CloseNotebookButton" type="Button" parent="CanvasLayer/NotebookPopup" unique_id=1101486235]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -48.0
+offset_bottom = 31.0
+grow_horizontal = 0
 text = "close"
+
+[node name="TabContainer" type="TabContainer" parent="CanvasLayer/NotebookPopup" unique_id=189399336]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+current_tab = 0
+
+[node name="Media" type="RichTextLabel" parent="CanvasLayer/NotebookPopup/TabContainer" unique_id=1546499829]
+layout_mode = 2
+text = "
+
+To use the Sloppy Media system, simply interact with the porch radio, or press [M].
+
+At SloppyStudios we think it's best that YOU decide what to watch, so make sure you have your .mp3/.ogv files placed in the music folder located at [midwest-slop-sports/midwestSlop/music]
+
+
+Happen to have a video you want to play on the projector that is NOT a .ogv file, simply use an online converter.
+"
+metadata/_tab_index = 0
+
+[node name="Cards" type="RichTextLabel" parent="CanvasLayer/NotebookPopup/TabContainer" unique_id=906434704]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 1
+
+[node name="Cornhole" type="RichTextLabel" parent="CanvasLayer/NotebookPopup/TabContainer" unique_id=128848705]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 2
+
+[node name="Disc golf" type="RichTextLabel" parent="CanvasLayer/NotebookPopup/TabContainer" unique_id=1829361053]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 3
 
 [connection signal="pressed" from="CanvasLayer/QuitMinigamePopup/HBoxContainer/YesButton" to="." method="_on_yes_button_pressed"]
 [connection signal="pressed" from="CanvasLayer/QuitMinigamePopup/HBoxContainer/NoButton" to="." method="_on_no_button_pressed"]
