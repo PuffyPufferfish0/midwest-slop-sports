@@ -5,6 +5,7 @@ var steam_app_id: int = 480
 
 var peer: SteamMultiplayerPeer = SteamMultiplayerPeer.new()
 var lobby_id: int = 0
+var player_scene = preload("res://scenes/player.tscn")
 
 func _ready():
 	_initialize_steam()
@@ -58,6 +59,7 @@ func _on_lobby_created(connect_status: int, created_lobby_id: int):
 		if error == OK:
 			multiplayer.multiplayer_peer = peer
 			print("Multiplayer peer hosting active via Steam P2P.")
+			spawn_player(multiplayer.get_unique_id())
 		else:
 			print("Failed to create multiplayer host peer. Error: ", error)
 
@@ -86,6 +88,19 @@ func _on_lobby_joined(joined_lobby_id: int, _permissions: int, _locked: bool, re
 
 func _on_peer_connected(id: int):
 	print("Player connected via Godot Multiplayer API! Internal network ID: ", id)
+	if multiplayer.is_server():
+		spawn_player(id)
 
 func _on_peer_disconnected(id: int):
 	print("Player disconnected. Internal network ID: ", id)
+
+func spawn_player(peer_id: int):
+	var current_scene = get_tree().current_scene
+	var players_container = current_scene.get_node("Players")
+	
+	if players_container:
+		var player_instance = player_scene.instantiate()
+		player_instance.name = str(peer_id)
+		players_container.add_child(player_instance)
+	else:
+		print("Error: Could not find the 'Players' node!")
