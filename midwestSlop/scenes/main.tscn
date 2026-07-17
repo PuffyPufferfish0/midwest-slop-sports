@@ -64,7 +64,7 @@ albedo_texture = ExtResource("4_c6pm6")
 uv1_scale = Vector3(0.2, 0.2, 0.2)
 uv1_triplanar = true
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_5poiv"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_c6pm6"]
 render_priority = 0
 shader = ExtResource("5_5he1u")
 shader_parameter/albedo = Color(1, 1, 1, 1)
@@ -1513,7 +1513,7 @@ size = Vector3(50, 4, 50)
 material = SubResource("StandardMaterial3D_85g3d")
 
 [node name="SimpleGrassTextured" type="MultiMeshInstance3D" parent="Level" unique_id=1059472916]
-material_override = SubResource("ShaderMaterial_5poiv")
+material_override = SubResource("ShaderMaterial_c6pm6")
 multimesh = SubResource("MultiMesh_jkv2x")
 script = ExtResource("8_chjal")
 roughness = 0.32
@@ -1986,7 +1986,7 @@ material = SubResource("StandardMaterial3D_fv21b")
 
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="." unique_id=1112869420]
 _spawnable_scenes = PackedStringArray("uid://cpn1tjwwxr82b")
-spawn_path = NodePath("../Level")
+spawn_path = NodePath("../Players")
 
 [node name="MainMenu" type="Node3D" parent="." unique_id=1071949993]
 
@@ -2045,3 +2045,5 @@ rotation_speed = 0.1
 
 [node name="projector" parent="." unique_id=1357590549 instance=ExtResource("36_a82wo")]
 transform = Transform3D(-0.5, 0, -4.371139e-08, 0, 0.5, 0, 4.371139e-08, 0, -0.5, -0.35802633, -1.854075, 13.140497)
+
+[node name="Players" type="Node3D" parent="." unique_id=1668403778]

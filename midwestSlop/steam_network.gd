@@ -59,7 +59,7 @@ func _on_lobby_created(connect_status: int, created_lobby_id: int):
 		Steam.setLobbyData(lobby_id, "name", Steam.getPersonaName() + "'s Backyard Match")
 		
 		# Initialize the High-Level Multiplayer Peer as the Host
-		var error = peer.create_host(0, [])
+		var error = peer.create_host(0)
 		if error == OK:
 			multiplayer.multiplayer_peer = peer
 			print("Multiplayer peer hosting active via Steam P2P.")
@@ -82,7 +82,7 @@ func _on_lobby_joined(joined_lobby_id: int, _permissions: int, _locked: bool, re
 		
 		var host_steam_id = Steam.getLobbyOwner(lobby_id)
 		
-		var error = peer.create_client(host_steam_id, 0, [])
+		var error = peer.create_client(host_steam_id, 0)
 		if error == OK:
 			multiplayer.multiplayer_peer = peer
 			print("Multiplayer peer client connected to host Steam ID: ", host_steam_id)
