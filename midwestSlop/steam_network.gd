@@ -38,8 +38,6 @@ func _initialize_steam():
 	else:
 		print("Failed to initialize Steam. Error code: ", initialize_response['status'])
 
-# --- LOBBY COMMANDS ---
-
 func host_steam_game():
 	print("Attempting to create Steam Lobby...")
 	Steam.createLobby(Steam.LOBBY_TYPE_PUBLIC, 2)
@@ -49,8 +47,6 @@ func join_steam_game():
 	Steam.addRequestLobbyListDistanceFilter(Steam.LOBBY_DISTANCE_FILTER_WORLDWIDE)
 	Steam.requestLobbyList()
 
-# --- STEAM CALLBACKS ---
-
 func _on_lobby_created(connect_status: int, created_lobby_id: int):
 	if connect_status == 1:
 		lobby_id = created_lobby_id
@@ -58,7 +54,6 @@ func _on_lobby_created(connect_status: int, created_lobby_id: int):
 		
 		Steam.setLobbyData(lobby_id, "name", Steam.getPersonaName() + "'s Backyard Match")
 		
-		# Initialize the High-Level Multiplayer Peer as the Host
 		var error = peer.create_host(0)
 		if error == OK:
 			multiplayer.multiplayer_peer = peer
@@ -76,7 +71,7 @@ func _on_lobby_match_list(lobbies: Array):
 		print("No active lobbies found. Make sure the host computer has started the game!")
 
 func _on_lobby_joined(joined_lobby_id: int, _permissions: int, _locked: bool, response: int):
-	if response == 1: # 1 indicates a successful connection handshake
+	if response == 1:
 		lobby_id = joined_lobby_id
 		print("Successfully entered Steam lobby.")
 		
@@ -88,8 +83,6 @@ func _on_lobby_joined(joined_lobby_id: int, _permissions: int, _locked: bool, re
 			print("Multiplayer peer client connected to host Steam ID: ", host_steam_id)
 		else:
 			print("Failed to establish multiplayer client peer. Error: ", error)
-
-# --- GODOT MULTIPLAYER HANDSHAKES ---
 
 func _on_peer_connected(id: int):
 	print("Player connected via Godot Multiplayer API! Internal network ID: ", id)
