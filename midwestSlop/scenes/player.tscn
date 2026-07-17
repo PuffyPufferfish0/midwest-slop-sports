@@ -133,6 +133,11 @@ visible = false
 layout_mode = 2
 metadata/_tab_index = 2
 
+[node name="shop" type="Control" parent="CanvasLayer/InventoryPopup/TabContainer" unique_id=191560347]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 3
+
 [node name="CapsLabel" type="Label" parent="CanvasLayer/InventoryPopup" unique_id=1869260110]
 layout_mode = 1
 anchors_preset = 1

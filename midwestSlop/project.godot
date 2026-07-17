@@ -36,12 +36,13 @@ Shortcuts/density_decrement=Object(Shortcut,"resource_local_to_scene":false,"res
 
 config/name="midwestSlop"
 run/main_scene="uid://cuknnttm8u6ew"
-config/features=PackedStringArray("4.6", "Forward Plus")
+config/features=PackedStringArray("4.7", "Forward Plus")
 config/icon="res://icon.svg"
 
 [autoload]
 
 SimpleGrass="*uid://bfq0snth8sj3h"
+SteamNetwork="*uid://brmb61mjo1sn8"
 
 [display]
 
@@ -50,7 +51,7 @@ window/stretch/aspect="expand"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/simplegrasstextured/plugin.cfg")
+enabled=PackedStringArray("res://addons/godotsteam/plugin.cfg", "res://addons/simplegrasstextured/plugin.cfg")
 
 [filesystem]
 
