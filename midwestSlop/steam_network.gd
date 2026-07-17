@@ -8,7 +8,7 @@ var lobby_id: int = 0
 
 func _ready():
 	_initialize_steam()
-	#comment
+
 	Steam.lobby_created.connect(_on_lobby_created)
 	Steam.lobby_match_list.connect(_on_lobby_match_list)
 	Steam.lobby_joined.connect(_on_lobby_joined)
