@@ -39,3 +39,11 @@ func _add_player(id: int):
 	level.add_child(player)
 	
 	player.global_position = spawn_point.global_position
+
+
+func _on_throwing_zone_body_entered(body: Node3D) -> void:
+	pass # Replace with function body.
+
+
+func _on_throwing_zone_body_exited(body: Node3D) -> void:
+	pass # Replace with function body.

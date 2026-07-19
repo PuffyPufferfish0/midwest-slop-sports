@@ -20,6 +20,7 @@ outline_color = Color(0, 0, 0, 1)
 shadow_size = 2
 
 [node name="Player" type="CharacterBody3D" unique_id=410094248]
+collision_layer = 4
 script = ExtResource("1_3vyb7")
 
 [node name="SpringArm3D" type="SpringArm3D" parent="." unique_id=1416095292]
@@ -29,6 +30,7 @@ spring_length = 4.4
 
 [node name="InteractRay" type="RayCast3D" parent="." unique_id=912847950]
 target_position = Vector3(0, 0, -3)
+collide_with_areas = true
 
 [node name="InteractPrompt" type="Label" parent="." unique_id=553355472]
 visible = false
@@ -329,6 +331,10 @@ text = "Accept the wager
 layout_mode = 2
 text = "Waiting for input"
 horizontal_alignment = 1
+
+[node name="PlayAloneButton" type="Button" parent="CanvasLayer/WagerPopup/VBoxContainer" unique_id=281864753]
+layout_mode = 2
+text = "Play Alone"
 
 [connection signal="pressed" from="CanvasLayer/QuitMinigamePopup/HBoxContainer/YesButton" to="." method="_on_yes_button_pressed"]
 [connection signal="pressed" from="CanvasLayer/QuitMinigamePopup/HBoxContainer/NoButton" to="." method="_on_no_button_pressed"]

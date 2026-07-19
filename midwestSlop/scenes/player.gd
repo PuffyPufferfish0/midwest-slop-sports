@@ -15,10 +15,10 @@ var is_inventory_open: bool = false
 var current_radio = null
 var is_media_menu_open: bool = false
 var is_notebook_open: bool = false
-
+var is_movement_locked: bool = false
 var bottle_caps: int = 0
 var beer_cooldown_timer: float = 0.0
-var base_beer_cooldown: float = 5.0 #seconds
+var base_beer_cooldown: float = 5.0
 var cooldown_multiplier: float = 1.0
 var notification_id: int = 0
 
@@ -27,6 +27,8 @@ var proposed_wager: int = 0
 var opponent_wager: int = 0
 var opponent_peer_id: int = 0
 var wager_locked_in: bool = false
+
+var bag_scene = preload("res://cornhole_bag.tscn")
 
 @onready var wager_popup = $CanvasLayer/WagerPopup
 @onready var wager_input = $CanvasLayer/WagerPopup/VBoxContainer/WagerInput
@@ -82,6 +84,12 @@ func _ready():
 	var accept_btn = find_child("AcceptButton", true, false)
 	if accept_btn and not accept_btn.pressed.is_connected(_on_accept_pressed):
 		accept_btn.pressed.connect(_on_accept_pressed)
+		
+	var play_alone_btn = find_child("PlayAloneButton", true, false)
+	if play_alone_btn and not play_alone_btn.pressed.is_connected(_on_play_alone_pressed):
+		play_alone_btn.pressed.connect(_on_play_alone_pressed)
+		
+	multiplayer.peer_disconnected.connect(_on_peer_disconnected_wager_check)
 
 func _input(event):
 	if not is_multiplayer_authority():
@@ -112,7 +120,7 @@ func _input(event):
 			if crosshair: crosshair.visible = true
 
 	if event is InputEventKey and event.physical_keycode == KEY_E and event.pressed and not event.echo:
-		if is_playing_minigame or is_inventory_open or is_media_menu_open or is_notebook_open:
+		if is_inventory_open or is_media_menu_open or is_notebook_open:
 			return 
 			
 		if interact_ray.is_colliding():
@@ -161,51 +169,46 @@ func _process(_delta):
 	if is_playing_minigame:
 		interact_prompt.visible = false
 		if crosshair:
-			crosshair.visible = false
+			crosshair.visible = true
 		
 		if Input.is_action_just_pressed("ui_cancel"):
 			quit_popup.visible = true
 			Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
-		return
 
 	if interact_ray.is_colliding():
 		var target = interact_ray.get_collider()
 		
 		if target.has_method("get_interact_prompt"):
-			interact_prompt.text = target.get_interact_prompt()
-			interact_prompt.visible = true
+			var prompt_text = target.get_interact_prompt()
+			if prompt_text != "":
+				interact_prompt.text = prompt_text
+				interact_prompt.visible = true
+			else:
+				interact_prompt.visible = false
 		else:
 			interact_prompt.visible = false
 	else:
 		interact_prompt.visible = false
 
-func _physics_process(delta):
-	if not is_multiplayer_authority():
-		return
-
-	# Lock movement if tied up in menus or games
-	if is_playing_minigame or is_inventory_open or is_media_menu_open or is_notebook_open:
-		return
-
+func _physics_process(delta: float) -> void:
 	if not is_on_floor():
 		velocity.y -= gravity * delta
 
-	if Input.is_action_just_pressed("ui_accept") and is_on_floor():
-		velocity.y = JUMP_VELOCITY
-
-	var input_dir = Input.get_vector("move_left", "move_right", "move_forward", "move_back")
-	var direction = (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
-	
-	if direction:
-		velocity.x = direction.x * SPEED
-		velocity.z = direction.z * SPEED
-	else:
-		velocity.x = move_toward(velocity.x, 0, SPEED)
-		velocity.z = move_toward(velocity.z, 0, SPEED)
+	if not is_movement_locked:
+		if Input.is_action_just_pressed("ui_accept") and is_on_floor():
+			velocity.y = JUMP_VELOCITY
+			
+		var input_dir = Input.get_vector("move_left", "move_right", "move_forward", "move_back")
+		var direction = (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
+		
+		if direction:
+			velocity.x = direction.x * SPEED
+			velocity.z = direction.z * SPEED
+		else:
+			velocity.x = move_toward(velocity.x, 0, SPEED)
+			velocity.z = move_toward(velocity.z, 0, SPEED)
 
 	move_and_slide()
-
-# --- NOTEBOOK FUNCTIONS ---
 
 func open_notebook():
 	is_notebook_open = true
@@ -220,9 +223,6 @@ func close_notebook():
 	
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	if crosshair: crosshair.visible = true
-
-
-# --- MEDIA MENU FUNCTIONS ---
 
 func open_media_menu(radio_node = null):
 	if radio_node:
@@ -284,14 +284,17 @@ func _on_volume_changed(value: float):
 	if current_radio and current_radio.has_method("set_volume"):
 		current_radio.set_volume(value)
 
-
-# --- MINIGAME EXIT FUNCTIONS ---
-
 func _on_yes_button_pressed():
 	quit_popup.visible = false
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	
 	is_playing_minigame = false
+	
+	wager_popup.visible = false
+	is_wager_menu_open = false
+	proposed_wager = 0
+	opponent_wager = 0
+	wager_locked_in = false
 	
 	if crosshair:
 		crosshair.visible = true 
@@ -316,14 +319,11 @@ func _on_yes_button_pressed():
 		if current_station.has_method("remove_player"):
 			current_station.remove_player(self)
 		current_station = null
+		
 
 func _on_no_button_pressed():
 	quit_popup.visible = false
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
-
-# --- ECONOMY FUNCTIONS ---
-
-# --- ECONOMY FUNCTIONS ---
 
 func drink_beer():
 	if beer_cooldown_timer <= 0:
@@ -336,11 +336,19 @@ func drink_beer():
 		var time_left = int(beer_cooldown_timer)
 		show_notification("Why drink 2 at once, party animal?? Cooldown: " + str(time_left) + " seconds remaining")
 		return false
+		
+func _on_play_alone_pressed():
+	wager_status.text = "Playing solo!"
+	find_child("PlayAloneButton").disabled = true
+	
+	close_wager_menu()
+	
+	if current_station and current_station.has_method("start_minigame"):
+		current_station.start_minigame()
 
 func update_caps_display():
 	if caps_label:
 		caps_label.text = "Caps: " + str(bottle_caps)
-
 
 func show_notification(message: String):
 	notification_label.text = message
@@ -354,7 +362,14 @@ func show_notification(message: String):
 	if notification_id == current_id:
 		notification_label.visible = false
 
-
+func close_wager_menu():
+	is_wager_menu_open = false
+	wager_popup.visible = false
+	
+	if not is_inventory_open and not is_media_menu_open and not is_notebook_open:
+		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+		if crosshair: crosshair.visible = true
+		
 func open_wager_menu(target_opponent_id: int):
 	opponent_peer_id = target_opponent_id
 	is_wager_menu_open = true
@@ -367,17 +382,13 @@ func open_wager_menu(target_opponent_id: int):
 	find_child("AcceptButton").disabled = true
 	find_child("ProposeButton").disabled = false
 	
+	var play_alone_btn = find_child("PlayAloneButton", true, false)
+	if play_alone_btn:
+		play_alone_btn.disabled = false
+	
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	if crosshair: crosshair.visible = false
-
-func close_wager_menu():
-	is_wager_menu_open = false
-	wager_popup.visible = false
 	
-	if not is_inventory_open and not is_media_menu_open and not is_notebook_open:
-		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
-		if crosshair: crosshair.visible = true
-
 func _on_propose_pressed():
 	var amount = wager_input.text.to_int()
 	
@@ -401,7 +412,6 @@ func receive_wager_proposal(amount: int, sender_id: int):
 		opponent_wager = amount
 		wager_status.text = "Opponent bet: " + str(amount) + " caps."
 		
-		# If they bet more than we have, we can't accept
 		if amount > bottle_caps:
 			wager_status.text = "Opponent bet " + str(amount) + ". You are too broke!"
 		else:
@@ -436,3 +446,28 @@ func lock_in_escrow():
 	
 	if current_station and current_station.has_method("start_minigame"):
 		current_station.start_minigame()
+
+func set_cornhole_mode(active: bool) -> void:
+	is_movement_locked = active
+	if active:
+		velocity = Vector3.ZERO
+		
+func _on_peer_disconnected_wager_check(id: int):
+	if is_wager_menu_open and opponent_peer_id == id:
+		wager_status.text = "Opponent fled! Starting solo..."
+		find_child("ProposeButton").disabled = true
+		find_child("AcceptButton").disabled = true
+		
+		await get_tree().create_timer(1.5).timeout
+		_on_play_alone_pressed()
+
+func spawn_bag():
+	var bag = bag_scene.instantiate()
+	get_tree().current_scene.add_child(bag)
+	
+
+	bag.add_collision_exception_with(self)
+	self.add_collision_exception_with(bag)
+	
+	var forward_dir = -camera.global_transform.basis.z.normalized()
+	bag.global_position = camera.global_position + (forward_dir * 1.5) - Vector3(0, 0.3, 0)

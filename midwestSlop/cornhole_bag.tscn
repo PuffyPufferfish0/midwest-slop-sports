@@ -1,0 +1,21 @@
+[gd_scene format=3 uid="uid://cp5cvk3blg1yu"]
+
+[ext_resource type="Script" uid="uid://dwjasaek4706c" path="res://cornhole_bag.gd" id="1_f11qt"]
+[ext_resource type="PackedScene" uid="uid://dyxx3k1rllcov" path="res://cornholebag.glb" id="2_d250r"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_f11qt"]
+
+[node name="CornholeBag" type="RigidBody3D" unique_id=16375761]
+collision_mask = 3
+gravity_scale = 0.0
+script = ExtResource("1_f11qt")
+throw_power = 0.1
+curve_multiplier = 0.075
+hold_distance = 3.0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=26646298]
+transform = Transform3D(-2.0200883e-08, 0.52627933, -1.13548335e-08, 0, -2.3004402e-08, -0.2597683, -0.46214232, -2.3004402e-08, 4.963355e-16, 0, 0, 0)
+shape = SubResource("BoxShape3D_f11qt")
+
+[node name="cornholebag" parent="." unique_id=2091823384 instance=ExtResource("2_d250r")]
+transform = Transform3D(-8.742278e-09, 0.2, -6.644131e-09, 0, -8.742278e-09, -0.152, -0.2, -8.742278e-09, 2.9042417e-16, 0, 0, 0)
