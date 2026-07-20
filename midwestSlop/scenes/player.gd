@@ -54,10 +54,14 @@ func _ready():
 		$CanvasLayer.hide() 
 		return
 		
-	camera.current = true
+	var my_camera = find_child("Camera3D", true, false)
+	if my_camera:
+		my_camera.current = is_multiplayer_authority()
+		
 	inventory_popup.visible = false
 	media_popup.visible = false
 	notebook_popup.visible = false
+	# ... rest of your _ready code
 	
 	var close_btn = find_child("CloseMediaButton", true, false)
 	if close_btn and not close_btn.pressed.is_connected(close_media_menu):
@@ -191,6 +195,9 @@ func _process(_delta):
 		interact_prompt.visible = false
 
 func _physics_process(delta: float) -> void:
+	if not is_multiplayer_authority():
+		return
+
 	if not is_on_floor():
 		velocity.y -= gravity * delta
 
@@ -209,7 +216,6 @@ func _physics_process(delta: float) -> void:
 			velocity.z = move_toward(velocity.z, 0, SPEED)
 
 	move_and_slide()
-
 func open_notebook():
 	is_notebook_open = true
 	notebook_popup.visible = true
@@ -463,11 +469,14 @@ func _on_peer_disconnected_wager_check(id: int):
 
 func spawn_bag():
 	var bag = bag_scene.instantiate()
+	bag.thrower = self
 	get_tree().current_scene.add_child(bag)
 	
-
-	bag.add_collision_exception_with(self)
-	self.add_collision_exception_with(bag)
-	
 	var forward_dir = -camera.global_transform.basis.z.normalized()
-	bag.global_position = camera.global_position + (forward_dir * 1.5) - Vector3(0, 0.3, 0)
+	bag.global_position = camera.global_position + (forward_dir * 2.5) - Vector3(0, 0.3, 0)
+
+func bag_thrown():
+	await get_tree().create_timer(3.0).timeout
+	
+	if current_station and current_station.has_method("switch_turn"):
+		current_station.rpc("switch_turn")

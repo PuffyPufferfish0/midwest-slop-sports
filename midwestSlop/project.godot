@@ -42,7 +42,6 @@ config/icon="res://icon.svg"
 [autoload]
 
 SimpleGrass="*uid://bfq0snth8sj3h"
-SteamNetwork="*uid://brmb61mjo1sn8"
 
 [display]
 
@@ -51,7 +50,7 @@ window/stretch/aspect="expand"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/godotsteam/plugin.cfg", "res://addons/simplegrasstextured/plugin.cfg")
+enabled=PackedStringArray("res://addons/simplegrasstextured/plugin.cfg")
 
 [filesystem]
 

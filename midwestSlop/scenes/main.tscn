@@ -36,9 +36,9 @@
 [ext_resource type="PackedScene" uid="uid://5to6bmfbfk7q" path="res://low-poly_lawn_chair.glb" id="31_1epgm"]
 [ext_resource type="Texture2D" uid="uid://dd5ca4e87erov" path="res://wooden_table_0.png" id="32_152kg"]
 [ext_resource type="FontFile" uid="uid://n7kfygqx0lj" path="res://beachday.otf" id="33_r4e17"]
-[ext_resource type="AudioStream" uid="uid://n14j6r3jxvhy" path="res://Me, Myself and Emory.mp3" id="34_y57op"]
 [ext_resource type="Script" uid="uid://bdr2bc5x6xl8a" path="res://cameraPan.gd" id="35_mlv25"]
 [ext_resource type="PackedScene" uid="uid://iur7cmqxtufr" path="res://xiaomi_wanbo_projector_t2_max.glb" id="36_a82wo"]
+[ext_resource type="AudioStream" uid="uid://k2auwm2bytnw" path="res://scenes/gamejamAmbiance.mp3" id="37_c6pm6"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_a8gtg"]
 albedo_texture = ExtResource("2_fuf3a")
@@ -1550,7 +1550,7 @@ resource_local_to_scene = true
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fv21b"]
 albedo_texture = ExtResource("32_152kg")
 
-[node name="Main" type="Control" unique_id=550988766]
+[node name="CanvasLayer" type="Control" unique_id=550988766]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -2017,6 +2017,19 @@ shape = SubResource("BoxShape3D_2282s")
 transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -0.6364231, 0, -8.80378)
 shape = SubResource("BoxShape3D_2282s")
 
+[node name="ThrowingZone2" type="Area3D" parent="Level/cornhole2" unique_id=842191112 node_paths=PackedStringArray("target_board")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 48.665344, 0, 5.0129595)
+script = ExtResource("26_5he1u")
+target_board = NodePath(".")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Level/cornhole2/ThrowingZone2" unique_id=1073765214]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0)
+shape = SubResource("BoxShape3D_2282s")
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="Level/cornhole2/ThrowingZone2" unique_id=180071756]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -0.6364231, 0, -8.80378)
+shape = SubResource("BoxShape3D_2282s")
+
 [node name="SpawnPoint" type="Marker3D" parent="Level" unique_id=1399855853]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6.089984, 0)
 
@@ -2116,7 +2129,7 @@ material = SubResource("StandardMaterial3D_fv21b")
 
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="." unique_id=1112869420]
 _spawnable_scenes = PackedStringArray("uid://cpn1tjwwxr82b")
-spawn_path = NodePath("../Players")
+spawn_path = NodePath("../Level")
 
 [node name="MainMenu" type="Node3D" parent="." unique_id=1071949993]
 
@@ -2145,7 +2158,7 @@ bbcode_enabled = true
 text = "Midwest Slop!!"
 
 [node name="MenuMusic" type="AudioStreamPlayer2D" parent="MainMenu/CanvasLayer/Node2D" unique_id=234475934]
-stream = ExtResource("34_y57op")
+stream = ExtResource("37_c6pm6")
 volume_db = -19.015
 autoplay = true
 
@@ -2180,3 +2193,5 @@ transform = Transform3D(-0.5, 0, -4.371139e-08, 0, 0.5, 0, 4.371139e-08, 0, -0.5
 
 [connection signal="body_entered" from="Level/cornhole2/ThrowingZone" to="." method="_on_throwing_zone_body_entered"]
 [connection signal="body_exited" from="Level/cornhole2/ThrowingZone" to="." method="_on_throwing_zone_body_exited"]
+[connection signal="body_entered" from="Level/cornhole2/ThrowingZone2" to="." method="_on_throwing_zone_body_entered"]
+[connection signal="body_exited" from="Level/cornhole2/ThrowingZone2" to="." method="_on_throwing_zone_body_exited"]

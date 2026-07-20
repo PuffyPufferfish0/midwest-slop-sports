@@ -1,21 +1,25 @@
 extends RigidBody3D
 
-@export var throw_power: float = 0.05
-@export var curve_multiplier: float = 1.5
-@export var hold_distance: float = 1.5
+@export var power_multiplier: float = 0.08
+@export var max_pull_distance: float = 300.0
+@export var max_power: float = 18.0 
 
 var is_dragging: bool = false
-var drag_path: Array[Vector2] = []
-var drag_start_time: float = 0.0
-
-var curve_force: float = 0.0
+var drag_start_pos: Vector2 = Vector2.ZERO
+var current_drag_pos: Vector2 = Vector2.ZERO
+var thrower: Node3D = null
 var is_thrown: bool = false
+var anchor_position: Vector3 = Vector3.ZERO
 
 @onready var camera: Camera3D = get_viewport().get_camera_3d()
 
 func _ready():
 	gravity_scale = 0.0
-	freeze = true 
+	freeze = true
+	call_deferred("_set_anchor")
+
+func _set_anchor():
+	anchor_position = global_position
 
 func _input(event: InputEvent) -> void:
 	if is_thrown: return
@@ -23,65 +27,62 @@ func _input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
 		if event.pressed:
 			is_dragging = true
-			drag_path.clear()
-			drag_path.append(event.position)
-			drag_start_time = Time.get_ticks_msec() / 1000.0
+			drag_start_pos = event.position
+			current_drag_pos = event.position
 		else:
 			if is_dragging:
 				is_dragging = false
-				_calculate_and_throw(event.position)
+				_launch_bag()
 
 	elif event is InputEventMouseMotion and is_dragging:
-		drag_path.append(event.position)
+		current_drag_pos = event.position
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	if is_dragging and not is_thrown:
-		var mouse_pos = get_viewport().get_mouse_position()
-		var target_pos = camera.project_position(mouse_pos, hold_distance)
+		var pull_vector = current_drag_pos - drag_start_pos
 		
-		global_position = global_position.lerp(target_pos, 20.0 * delta)
+		if pull_vector.length() > max_pull_distance:
+			pull_vector = pull_vector.normalized() * max_pull_distance
+			
+		var forward_dir = -camera.global_transform.basis.z.normalized()
+		var right_dir = camera.global_transform.basis.x.normalized()
+		var up_dir = Vector3.UP
+		
+		var visual_offset = (right_dir * (pull_vector.x * 0.003)) + (-forward_dir * (pull_vector.y * 0.004)) + (-up_dir * (pull_vector.y * 0.001))
+		
+		global_position = anchor_position + visual_offset
 
-func _calculate_and_throw(end_pos: Vector2) -> void:
-	if drag_path.size() < 3: 
+func _launch_bag() -> void:
+	var pull_vector = current_drag_pos - drag_start_pos
+	
+	if pull_vector.y <= 20: 
 		freeze = false
 		gravity_scale = 1.0
 		is_thrown = true
-		return 
+		return
+		
+	if pull_vector.length() > max_pull_distance:
+		pull_vector = pull_vector.normalized() * max_pull_distance
 
-	var start_pos: Vector2 = drag_path[0]
-	var swipe_vector: Vector2 = end_pos - start_pos
-	var swipe_time: float = (Time.get_ticks_msec() / 1000.0) - drag_start_time
-	
-	if swipe_time <= 0.01: swipe_time = 0.01
-
-	var throw_speed: float = (abs(swipe_vector.y) / swipe_time) * throw_power
-
-	var mid_point: Vector2 = drag_path[drag_path.size() / 2]
-	var straight_line_mid: Vector2 = (start_pos + end_pos) / 2.0
-	
-	var deviation: float = mid_point.x - straight_line_mid.x
-	var screen_width: float = get_viewport().get_visible_rect().size.x
-	var normalized_curve: float = deviation / (screen_width * 0.5)
-	
-	curve_force = normalized_curve * curve_multiplier * 15.0 
-
-	var forward_dir: Vector3 = -camera.global_transform.basis.z.normalized()
-	var right_dir: Vector3 = camera.global_transform.basis.x.normalized()
-	var up_dir: Vector3 = Vector3.UP
-
-	var lateral_aim: float = (end_pos.x - start_pos.x) * 0.01
+	var forward_dir = -camera.global_transform.basis.z.normalized()
+	var right_dir = camera.global_transform.basis.x.normalized()
+	var up_dir = Vector3.UP
 	
 	freeze = false
 	gravity_scale = 1.0
 	is_thrown = true
 	
-	var impulse_dir: Vector3 = (forward_dir + (up_dir * 0.5) + (right_dir * lateral_aim)).normalized()
+	var throw_speed = pull_vector.length() * power_multiplier
+	throw_speed = clamp(throw_speed, 0.0, max_power)
+	
+	var lateral_aim = -pull_vector.x * 0.004
+	var upward_aim = 0.3 + (pull_vector.y * 0.0015) # Base arc + extra height the harder you pull
+	
+	var impulse_dir = (forward_dir + (up_dir * upward_aim) + (right_dir * lateral_aim)).normalized()
 	apply_central_impulse(impulse_dir * throw_speed)
+	if thrower and thrower.has_method("bag_thrown"):
+		thrower.bag_thrown()
 
-func _physics_process(_delta: float) -> void:
-	if is_thrown and linear_velocity.length() > 0.5:
-		var right_dir: Vector3 = camera.global_transform.basis.x.normalized()
-		apply_central_force(right_dir * curve_force)
 # --- INTERACTION SYSTEM ---
 
 func get_interact_prompt() -> String:
@@ -93,5 +94,4 @@ func interact(player: Node3D) -> void:
 	if is_thrown:
 		if player.has_method("spawn_bag"):
 			player.spawn_bag()
-			
 		queue_free()
