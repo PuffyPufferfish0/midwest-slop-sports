@@ -1,5 +1,0 @@
-[gd_scene format=3 uid="uid://cg5pskjjgmk73"]
-
-[ext_resource type="PackedScene" uid="uid://8vky5axm8nww" path="res://discGolf.fbx" id="1_gmby2"]
-
-[node name="discGolf" unique_id=1530077421 instance=ExtResource("1_gmby2")]
