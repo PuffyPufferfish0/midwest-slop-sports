@@ -20,7 +20,7 @@
 [ext_resource type="PackedScene" uid="uid://lbh8e00a0x3x" path="res://house.tscn" id="17_bu4jf"]
 [ext_resource type="PackedScene" uid="uid://dfu2h3bl33tj4" path="res://card.tscn" id="18_2cjbq"]
 [ext_resource type="PackedScene" uid="uid://8vky5axm8nww" path="res://discGolf.fbx" id="18_o7ddy"]
-[ext_resource type="Script" uid="uid://cfwokqaa17yqk" path="res://scenes/cooler.gd" id="19_c6pm6"]
+[ext_resource type="Script" uid="uid://c5ayewovvtd54" path="res://scenes/cooler.gd" id="19_c6pm6"]
 [ext_resource type="Texture2D" uid="uid://dkglmpc0yy68w" path="res://basic_beach_cooler_0.png" id="19_pibwh"]
 [ext_resource type="Texture2D" uid="uid://cly65pk8vyee6" path="res://basic_beach_cooler_1.png" id="20_c6pm6"]
 [ext_resource type="Texture2D" uid="uid://dsoh8miaeygv8" path="res://basic_beach_cooler_2.png" id="21_5he1u"]
@@ -28,19 +28,19 @@
 [ext_resource type="PackedScene" uid="uid://cvl8gh6e2g1kc" path="res://wooden_table.glb" id="23_augu2"]
 [ext_resource type="PackedScene" uid="uid://ch45gie4snxmj" path="res://cigar_ashtray_used.glb" id="24_tm6hj"]
 [ext_resource type="PackedScene" uid="uid://b8o8ruma2tfyl" path="res://scenes/beer_bottle.glb" id="25_kf5aa"]
-[ext_resource type="Script" uid="uid://cc0eurobx4enn" path="res://scenes/throwing_zone.gd" id="26_5he1u"]
+[ext_resource type="Script" uid="uid://cmq3wa5ntb0qo" path="res://scenes/throwing_zone.gd" id="26_5he1u"]
 [ext_resource type="PackedScene" uid="uid://cargtfsxqcgb" path="res://scenes/d1_prodigy_disc_golf_disc.glb" id="26_t5ykj"]
 [ext_resource type="PackedScene" uid="uid://dw8n6w1pnokmh" path="res://vintage_1984_samsung_bt-123aj_portable_5_2k.glb" id="27_e755i"]
-[ext_resource type="Script" uid="uid://cmj3bwsts1ig8" path="res://scenes/radio_tv.gd" id="28_ro3en"]
+[ext_resource type="Script" uid="uid://dapbs4u86c883" path="res://scenes/radio_tv.gd" id="28_ro3en"]
 [ext_resource type="PackedScene" uid="uid://j55ekowduwjs" path="res://projector_screen_low_poly.glb" id="29_od4ux"]
-[ext_resource type="Script" uid="uid://b0tfokklfvb6w" path="res://scenes/mesh_instance_3d.gd" id="30_xhfw6"]
+[ext_resource type="Script" uid="uid://1qrybe52e77j" path="res://scenes/mesh_instance_3d.gd" id="30_xhfw6"]
 [ext_resource type="PackedScene" uid="uid://5to6bmfbfk7q" path="res://low-poly_lawn_chair.glb" id="31_1epgm"]
 [ext_resource type="Texture2D" uid="uid://dd5ca4e87erov" path="res://wooden_table_0.png" id="32_152kg"]
 [ext_resource type="FontFile" uid="uid://n7kfygqx0lj" path="res://beachday.otf" id="33_r4e17"]
 [ext_resource type="PackedScene" uid="uid://bdm1g03wx6tvk" path="res://rusty_japanese_arcade.glb" id="35_c6pm6"]
 [ext_resource type="Script" uid="uid://bdr2bc5x6xl8a" path="res://cameraPan.gd" id="35_mlv25"]
 [ext_resource type="PackedScene" uid="uid://iur7cmqxtufr" path="res://xiaomi_wanbo_projector_t2_max.glb" id="36_a82wo"]
-[ext_resource type="AudioStream" uid="uid://cg7hm2eg4ogc3" path="res://gamejamAmbiance.mp3" id="37_c6pm6"]
+[ext_resource type="AudioStream" uid="uid://k2auwm2bytnw" path="res://scenes/gamejamAmbiance.mp3" id="37_c6pm6"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_a8gtg"]
 albedo_texture = ExtResource("2_fuf3a")
@@ -66,7 +66,7 @@ albedo_texture = ExtResource("4_c6pm6")
 uv1_scale = Vector3(0.2, 0.2, 0.2)
 uv1_triplanar = true
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_5poiv"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_c6pm6"]
 render_priority = 0
 shader = ExtResource("5_5he1u")
 shader_parameter/albedo = Color(1, 1, 1, 1)
@@ -1595,7 +1595,7 @@ size = Vector3(50, 4, 50)
 material = SubResource("StandardMaterial3D_85g3d")
 
 [node name="SimpleGrassTextured" type="MultiMeshInstance3D" parent="Level" unique_id=1059472916]
-material_override = SubResource("ShaderMaterial_5poiv")
+material_override = SubResource("ShaderMaterial_c6pm6")
 multimesh = SubResource("MultiMesh_jkv2x")
 script = ExtResource("8_chjal")
 roughness = 0.32
