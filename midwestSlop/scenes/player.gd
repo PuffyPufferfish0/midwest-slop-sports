@@ -30,6 +30,7 @@ var wager_locked_in: bool = false
 
 var bag_scene = preload("res://cornhole_bag.tscn")
 
+@onready var score_ui = $CanvasLayer/ScoreUI
 @onready var wager_popup = $CanvasLayer/WagerPopup
 @onready var wager_input = $CanvasLayer/WagerPopup/VBoxContainer/WagerInput
 @onready var wager_status = $CanvasLayer/WagerPopup/VBoxContainer/StatusLabel
@@ -53,6 +54,8 @@ func _ready():
 	if not is_multiplayer_authority():
 		$CanvasLayer.hide() 
 		return
+	if score_ui: 
+		score_ui.visible = false
 		
 	var my_camera = find_child("Camera3D", true, false)
 	if my_camera:
@@ -61,7 +64,6 @@ func _ready():
 	inventory_popup.visible = false
 	media_popup.visible = false
 	notebook_popup.visible = false
-	# ... rest of your _ready code
 	
 	var close_btn = find_child("CloseMediaButton", true, false)
 	if close_btn and not close_btn.pressed.is_connected(close_media_menu):
@@ -129,8 +131,13 @@ func _input(event):
 			
 		if interact_ray.is_colliding():
 			var target = interact_ray.get_collider()
-			if target.has_method("interact"):
+			var shape_idx = interact_ray.get_collider_shape()
+			
+			if target.has_method("interact_with_shape"):
+				target.interact_with_shape(self, shape_idx)
+			elif target.has_method("interact"):
 				target.interact(self)
+				
 	if is_inventory_open or is_media_menu_open or is_notebook_open:
 		return
 	
@@ -197,25 +204,28 @@ func _process(_delta):
 func _physics_process(delta: float) -> void:
 	if not is_multiplayer_authority():
 		return
+		
+	if is_movement_locked:
+		return
 
 	if not is_on_floor():
 		velocity.y -= gravity * delta
 
-	if not is_movement_locked:
-		if Input.is_action_just_pressed("ui_accept") and is_on_floor():
-			velocity.y = JUMP_VELOCITY
-			
-		var input_dir = Input.get_vector("move_left", "move_right", "move_forward", "move_back")
-		var direction = (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
+	if Input.is_action_just_pressed("ui_accept") and is_on_floor():
+		velocity.y = JUMP_VELOCITY
 		
-		if direction:
-			velocity.x = direction.x * SPEED
-			velocity.z = direction.z * SPEED
-		else:
-			velocity.x = move_toward(velocity.x, 0, SPEED)
-			velocity.z = move_toward(velocity.z, 0, SPEED)
+	var input_dir = Input.get_vector("move_left", "move_right", "move_forward", "move_back")
+	var direction = (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
+	
+	if direction:
+		velocity.x = direction.x * SPEED
+		velocity.z = direction.z * SPEED
+	else:
+		velocity.x = move_toward(velocity.x, 0, SPEED)
+		velocity.z = move_toward(velocity.z, 0, SPEED)
 
 	move_and_slide()
+	
 func open_notebook():
 	is_notebook_open = true
 	notebook_popup.visible = true
@@ -295,7 +305,7 @@ func _on_yes_button_pressed():
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	
 	is_playing_minigame = false
-	
+	is_movement_locked = false
 	wager_popup.visible = false
 	is_wager_menu_open = false
 	proposed_wager = 0
@@ -325,7 +335,6 @@ func _on_yes_button_pressed():
 		if current_station.has_method("remove_player"):
 			current_station.remove_player(self)
 		current_station = null
-		
 
 func _on_no_button_pressed():
 	quit_popup.visible = false
@@ -410,24 +419,37 @@ func _on_propose_pressed():
 	find_child("ProposeButton").disabled = true
 	wager_status.text = "Sent proposal. Waiting for opponent..."
 	
-	rpc_id(opponent_peer_id, "receive_wager_proposal", amount, multiplayer.get_unique_id())
+	# THE FIX: Find the opponent's node in the scene tree and send the RPC directly to them!
+	var opponent_node = get_parent().get_node_or_null(str(opponent_peer_id))
+	if opponent_node:
+		opponent_node.rpc_id(opponent_peer_id, "receive_wager_proposal", amount, multiplayer.get_unique_id())
 
 @rpc("any_peer", "call_remote")
 func receive_wager_proposal(amount: int, sender_id: int):
-	if sender_id == opponent_peer_id:
-		opponent_wager = amount
-		wager_status.text = "Opponent bet: " + str(amount) + " caps."
+	# THE FIX: Force the menu to open for the receiving player!
+	open_wager_menu(sender_id)
+	
+	opponent_wager = amount
+	wager_status.text = "Opponent bet: " + str(amount) + " caps."
+	
+	# Customize the UI since this player is receiving, not proposing
+	wager_input.editable = false
+	find_child("ProposeButton").disabled = true
 		
-		if amount > bottle_caps:
-			wager_status.text = "Opponent bet " + str(amount) + ". You are too broke!"
-		else:
-			find_child("AcceptButton").disabled = false
+	if amount > bottle_caps:
+		wager_status.text = "Opponent bet " + str(amount) + ". You are too broke!"
+		find_child("AcceptButton").disabled = true
+	else:
+		find_child("AcceptButton").disabled = false
 
 func _on_accept_pressed():
 	find_child("AcceptButton").disabled = true
 	wager_status.text = "Wager Accepted! Game starting..."
 	
-	rpc_id(opponent_peer_id, "receive_wager_acceptance", multiplayer.get_unique_id())
+	# THE FIX: Send the acceptance directly to the opponent's node!
+	var opponent_node = get_parent().get_node_or_null(str(opponent_peer_id))
+	if opponent_node:
+		opponent_node.rpc_id(opponent_peer_id, "receive_wager_acceptance", multiplayer.get_unique_id())
 	
 	lock_in_escrow()
 
@@ -457,6 +479,9 @@ func set_cornhole_mode(active: bool) -> void:
 	is_movement_locked = active
 	if active:
 		velocity = Vector3.ZERO
+		if score_ui: score_ui.visible = true
+	else:
+		if score_ui: score_ui.visible = false
 		
 func _on_peer_disconnected_wager_check(id: int):
 	if is_wager_menu_open and opponent_peer_id == id:
@@ -468,15 +493,36 @@ func _on_peer_disconnected_wager_check(id: int):
 		_on_play_alone_pressed()
 
 func spawn_bag():
-	var bag = bag_scene.instantiate()
-	bag.thrower = self
-	get_tree().current_scene.add_child(bag)
-	
+	var cam_pos = camera.global_position
 	var forward_dir = -camera.global_transform.basis.z.normalized()
-	bag.global_position = camera.global_position + (forward_dir * 2.5) - Vector3(0, 0.3, 0)
+	
+	var bag_name = "Bag_" + str(Time.get_ticks_usec())
+	
+	rpc("receive_bag_spawn", cam_pos, forward_dir, bag_name)
 
-func bag_thrown():
+@rpc("any_peer", "call_local")
+func receive_bag_spawn(cam_pos: Vector3, forward_dir: Vector3, bag_name: String):
+	var bag = bag_scene.instantiate()
+	bag.name = bag_name
+	bag.thrower = self
+	
+	get_parent().add_child(bag)
+	
+	bag.global_position = cam_pos + (forward_dir * 2.5) - Vector3(0, 0.3, 0)
+func bag_thrown(bag: Node3D):
 	await get_tree().create_timer(3.0).timeout
+	
+	var points = 0
+	if is_instance_valid(bag):
+		points = bag.current_points
+		
+	if current_station and current_station.has_method("register_score"):
+		current_station.rpc("register_score", multiplayer.get_unique_id(), points)
 	
 	if current_station and current_station.has_method("switch_turn"):
 		current_station.rpc("switch_turn")
+
+@rpc("any_peer", "call_local")
+func update_score_ui(p1_score: int, p2_score: int):
+	if score_ui:
+		score_ui.text = "Player 1: " + str(p1_score) + " | Player 2: " + str(p2_score)
