@@ -47,6 +47,8 @@ var bag_scene = preload("res://cornhole_bag.tscn")
 @onready var quit_popup = $CanvasLayer/QuitMinigamePopup
 @onready var crosshair = $CanvasLayer/Crosshair
 @onready var caps_label = $CanvasLayer/InventoryPopup/CapsLabel
+@onready var anim_player = $FixedModel/AnimationPlayer
+@onready var model = $FixedModel
 
 func _enter_tree():
 	set_multiplayer_authority(str(name).to_int())
@@ -226,6 +228,18 @@ func _physics_process(delta: float) -> void:
 		velocity.x = move_toward(velocity.x, 0, SPEED)
 		velocity.z = move_toward(velocity.z, 0, SPEED)
 
+	var horizontal_speed = Vector2(velocity.x, velocity.z).length()
+
+	if horizontal_speed > 0.1:
+		if anim_player:
+			anim_player.play("walk_perfect")
+		var target_angle = atan2(velocity.x, velocity.z)
+		if model:
+			model.rotation.y = lerp_angle(model.rotation.y, target_angle, delta * 10.0)
+	else:
+		if anim_player:
+			anim_player.stop()
+
 	move_and_slide()
 	
 func open_notebook():
@@ -248,7 +262,12 @@ func open_media_menu(radio_node = null):
 	elif current_radio == null:
 		current_radio = get_tree().root.find_child("RadioTV", true, false)
 		
-	var horizontal_speed = Vector2(velocity.x, velocity.z).length()
+	is_media_menu_open = true
+	media_popup.visible = true
+	populate_song_list()
+	
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	if crosshair: crosshair.visible = false
 
 func close_media_menu():
 	is_media_menu_open = false
@@ -415,20 +434,17 @@ func _on_propose_pressed():
 	find_child("ProposeButton").disabled = true
 	wager_status.text = "Sent proposal. Waiting for opponent..."
 	
-	# THE FIX: Find the opponent's node in the scene tree and send the RPC directly to them!
 	var opponent_node = get_parent().get_node_or_null(str(opponent_peer_id))
 	if opponent_node:
 		opponent_node.rpc_id(opponent_peer_id, "receive_wager_proposal", amount, multiplayer.get_unique_id())
 
 @rpc("any_peer", "call_remote")
 func receive_wager_proposal(amount: int, sender_id: int):
-	# THE FIX: Force the menu to open for the receiving player!
 	open_wager_menu(sender_id)
 	
 	opponent_wager = amount
 	wager_status.text = "Opponent bet: " + str(amount) + " caps."
 	
-	# Customize the UI since this player is receiving, not proposing
 	wager_input.editable = false
 	find_child("ProposeButton").disabled = true
 		
@@ -442,7 +458,6 @@ func _on_accept_pressed():
 	find_child("AcceptButton").disabled = true
 	wager_status.text = "Wager Accepted! Game starting..."
 	
-	# THE FIX: Send the acceptance directly to the opponent's node!
 	var opponent_node = get_parent().get_node_or_null(str(opponent_peer_id))
 	if opponent_node:
 		opponent_node.rpc_id(opponent_peer_id, "receive_wager_acceptance", multiplayer.get_unique_id())
@@ -505,6 +520,7 @@ func receive_bag_spawn(cam_pos: Vector3, forward_dir: Vector3, bag_name: String)
 	get_parent().add_child(bag)
 	
 	bag.global_position = cam_pos + (forward_dir * 2.5) - Vector3(0, 0.3, 0)
+
 func bag_thrown(bag: Node3D):
 	await get_tree().create_timer(3.0).timeout
 	
