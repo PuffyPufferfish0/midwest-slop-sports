@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://cm0d5tyhhkmlu"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_kfoul"]
+
+[node name="SnapPoint" type="Area3D" unique_id=176595550]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=849342708 groups=["snap_points"]]
+transform = Transform3D(0.2, 0, 0, 0, 0.3, 0, 0, 0, 0.25, 0, 0, 0.28395313)
+shape = SubResource("BoxShape3D_kfoul")
