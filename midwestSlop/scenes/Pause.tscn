@@ -1,0 +1,34 @@
+[gd_scene format=3 uid="uid://dbdwf315wcgnk"]
+
+[ext_resource type="Script" uid="uid://qow1u43nsojs" path="res://Pause.gd" id="1_0ep5p"]
+
+[node name="PauseMenu" type="Control" unique_id=703351362]
+process_mode = 2
+layout_mode = 3
+anchors_preset = 0
+offset_left = -1.0
+offset_top = -7.0
+offset_right = 1145.0
+offset_bottom = 635.0
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=358946546]
+propagate_maximum_size = true
+layout_mode = 0
+offset_left = -2.0
+offset_top = 2.0
+offset_right = 1151.0
+offset_bottom = 647.0
+color = Color(0.9882353, 0.5647059, 0.42745098, 0.47058824)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ColorRect" unique_id=1139461932]
+layout_mode = 0
+offset_right = 1152.0
+offset_bottom = 644.0
+
+[node name="QuitButton" type="Button" parent="ColorRect/VBoxContainer" unique_id=1070693307]
+layout_mode = 2
+script = ExtResource("1_0ep5p")
+
+[node name="ResumeButton" type="Button" parent="ColorRect/VBoxContainer" unique_id=997070490]
+layout_mode = 2
+script = ExtResource("1_0ep5p")

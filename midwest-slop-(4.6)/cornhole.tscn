@@ -1,5 +1,0 @@
-[gd_scene format=3 uid="uid://fw7g4cq72siq"]
-
-[ext_resource type="PackedScene" uid="uid://dp0b6fx8ui7yi" path="res://cards/cornhole.glb" id="1_phit7"]
-
-[node name="cornhole" unique_id=2005931999 instance=ExtResource("1_phit7")]
