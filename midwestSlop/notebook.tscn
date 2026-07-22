@@ -1,5 +1,0 @@
-[gd_scene format=3 uid="uid://bpk4sng3h8o65"]
-
-[ext_resource type="PackedScene" uid="uid://ut811ftv846d" path="res://single_spiral_notepad.glb" id="1_dxuyj"]
-
-[node name="Sketchfab_Scene" unique_id=574927460 instance=ExtResource("1_dxuyj")]
