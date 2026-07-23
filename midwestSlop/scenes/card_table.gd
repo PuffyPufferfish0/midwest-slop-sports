@@ -8,11 +8,15 @@ var player_2_hp: int = 30
 
 var selected_attacker: Area3D = null
 
-func handle_card_clicked(clicked_card: Area3D, clicker_id: int):
+func handle_card_clicked(clicked_card: Area3D, clicker_seat: int):
 	if selected_attacker == null:
-		selected_attacker = clicked_card
-		selected_attacker.set_selected(true)
-		print("Attacker locked in: ", selected_attacker.data.card_name)
+		# RULE 1: You can only select YOUR OWN card as an attacker
+		if clicked_card.owner_seat == clicker_seat:
+			selected_attacker = clicked_card
+			selected_attacker.set_selected(true)
+			print("Attacker locked in: ", selected_attacker.data.card_name)
+		else:
+			print("You cannot attack with the opponent's card!")
 		
 	elif selected_attacker == clicked_card:
 		selected_attacker.set_selected(false)
@@ -20,10 +24,14 @@ func handle_card_clicked(clicked_card: Area3D, clicker_id: int):
 		print("Attacker deselected.")
 		
 	else:
-		print("Target chosen: ", clicked_card.data.card_name)
-		resolve_combat(selected_attacker, clicked_card)
-		selected_attacker.set_selected(false)
-		selected_attacker = null
+		# RULE 2: You can only target the OPPONENT'S card to deal damage
+		if clicked_card.owner_seat != clicker_seat:
+			print("Target chosen: ", clicked_card.data.card_name)
+			resolve_combat(selected_attacker, clicked_card)
+			selected_attacker.set_selected(false)
+			selected_attacker = null
+		else:
+			print("Friendly fire is disabled! You cannot attack your own card.")
 
 func resolve_combat(attacker: Area3D, defender: Area3D):
 	var damage = attacker.current_attack

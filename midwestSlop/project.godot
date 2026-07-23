@@ -42,6 +42,7 @@ config/icon="res://icon.svg"
 [autoload]
 
 SimpleGrass="*uid://bfq0snth8sj3h"
+CardDatabase="*uid://d3gi4cr5io23r"
 
 [display]
 

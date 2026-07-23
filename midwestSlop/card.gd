@@ -2,7 +2,6 @@ extends Area3D
 
 @export var data: CardData
 
-
 # Visual Nodes
 @onready var card_art = $blank_card/CardArt
 @export var owner_seat: int = 1
@@ -36,6 +35,17 @@ func initialize_card():
 	if data.card_texture:
 		card_art.texture = data.card_texture
 
+# --- SECURITY HELPER ---
+func get_local_seat_number() -> int:
+	var all_bodies = get_tree().current_scene.find_children("*", "CharacterBody3D", true, false)
+	for body in all_bodies:
+		if body.has_method("drink_beer") and body.is_multiplayer_authority():
+			if body.get("current_station") != null:
+				if body.current_station.get("player_2") == body:
+					return 2
+			return 1 # Default to 1 if they are the authority but not player 2
+	return 0 # Not sitting
+
 func _input(event):
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
 		var active_cam = get_viewport().get_camera_3d()
@@ -54,12 +64,21 @@ func _input(event):
 			var result = space_state.intersect_ray(ray_query)
 			
 			if result and result.collider == self:
+				var my_seat = get_local_seat_number()
+				
 				# ATTACK MODE (Holding Shift)
 				if Input.is_key_pressed(KEY_SHIFT):
-					#print("Targeted card: ", data.card_name, " (Health: ", current_health, " | Attack: ", current_attack, ")")
-					get_tree().call_group("card_table", "handle_card_clicked", self, multiplayer.get_unique_id())
+					# Pass the clicker's seat to the table so the referee can validate the rules!
+					get_tree().call_group("card_table", "handle_card_clicked", self, my_seat)
+					
 				# DRAG MODE (Just Clicking)
 				else:
+					# --- AUTHORIZATION CHECK ---
+					if my_seat != owner_seat:
+						print("Access Denied: That is not your card!")
+						return # Kills the function here so they can't drag it
+					# ---------------------------
+					
 					is_dragging = true
 					drag_plane_y = global_position.y
 					global_position.y += 0.1
@@ -94,21 +113,12 @@ func _check_snap_points():
 	var closest_point = null
 	var closest_dist = INF
 	
-	# 1. Default to seat 1
+	# 1. Target the snap points for whoever owns the card
 	var target_group = "seat_1_snaps"
+	if owner_seat == 2:
+		target_group = "seat_2_snaps"
 	
-	# 2. Bulletproof way to find the local player in the scene tree
-	var all_bodies = get_tree().current_scene.find_children("*", "CharacterBody3D", true, false)
-	for body in all_bodies:
-		# Find the node running player.gd that belongs to THIS client
-		if body.has_method("drink_beer") and body.is_multiplayer_authority():
-			if body.get("current_station") != null:
-				# If this player is registered as player_2 at the station, switch the target group
-				if body.current_station.get("player_2") == body:
-					target_group = "seat_2_snaps"
-			break
-	
-	# 3. Find the closest snap point in the assigned group
+	# 2. Find the closest snap point in the assigned group
 	for area in get_overlapping_areas():
 		if area.is_in_group(target_group):
 			var dist = global_position.distance_to(area.global_position)
@@ -117,50 +127,22 @@ func _check_snap_points():
 				closest_dist = dist
 				closest_point = area
 				
-	# 4. Snap and Rotate
+	# 3. Snap and Rotate
 	if closest_point:
-		# Snap dead-center to the snap point's position
-		global_position = Vector3(closest_point.global_position.x, drag_plane_y, closest_point.global_position.z)
+		# Snap dead-center to the snap point's position, and lift it slightly on the Y-axis!
+		# ---> Tweak the "0.05" up or down to get the exact height you want! <---
+		global_position = Vector3(closest_point.global_position.x, closest_point.global_position.y + 0.05, closest_point.global_position.z)
 		
-		# Copy the snap point's rotation, then pivot it 90 degrees to make it vertical
+		# Copy the snap point's rotation, then pivot it 90 degrees to make it horizontal
 		global_rotation = closest_point.global_rotation
 		global_rotation.y += deg_to_rad(90)
-	else:
-		# Optional: Drop behavior if outside a valid snap point
-		pass
+		
+		# Update our drag plane so it remembers this new height for the next time we click it
+		drag_plane_y = global_position.y
 		
 	# CRITICAL: Broadcast the final, perfect resting place and rotation to the network!
 	rpc("update_snap_state", global_position, global_rotation)
 
-# --- NETWORK SYNC FUNCTIONS ---
-
-# "unreliable" is used for dragging because we are sending it every single frame. 
-# If a packet drops, it doesn't matter, the next frame will instantly correct it.
-@rpc("any_peer", "call_remote", "unreliable")
-func update_drag_position(new_pos: Vector3):
-	global_position = new_pos
-
-# "reliable" is used for the snap. We only send this once when the mouse is released,
-# so we guarantee the network delivers this exact final position.
-@rpc("any_peer", "call_remote", "reliable")
-func update_snap_state(final_pos: Vector3, final_rot: Vector3):
-	global_position = final_pos
-	global_rotation = final_rot
-	
-# --- NETWORK COMBAT FUNCTIONS ---
-
-@rpc("any_peer", "call_local", "reliable")
-func sync_take_damage(amount: int):
-	current_health -= amount
-	
-	# Update both health labels on everyone's screen
-	health_label_bottom.text = str(current_health)
-	health_label_top.text = str(current_health)
-
-@rpc("any_peer", "call_local", "reliable")
-func sync_destroy():
-	# Removes the card from the 3D world for everyone
-	queue_free()
 func set_selected(selected: bool):
 	if selected:
 		# Remember the height and float up 0.2 meters
@@ -169,3 +151,25 @@ func set_selected(selected: bool):
 	else:
 		# Drop back down to the resting height
 		global_position.y = base_y
+
+# --- NETWORK SYNC FUNCTIONS ---
+@rpc("any_peer", "call_remote", "unreliable")
+func update_drag_position(new_pos: Vector3):
+	global_position = new_pos
+
+@rpc("any_peer", "call_remote", "reliable")
+func update_snap_state(final_pos: Vector3, final_rot: Vector3):
+	global_position = final_pos
+	global_rotation = final_rot
+	
+# --- NETWORK COMBAT FUNCTIONS ---
+@rpc("any_peer", "call_local", "reliable")
+func sync_take_damage(amount: int):
+	current_health -= amount
+	
+	health_label_bottom.text = str(current_health)
+	health_label_top.text = str(current_health)
+
+@rpc("any_peer", "call_local", "reliable")
+func sync_destroy():
+	queue_free()

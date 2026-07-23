@@ -34,6 +34,9 @@ func join_game(player, seat_number):
 	
 	player.current_station = self 
 	
+	# ---> ADD THIS LINE <---
+	player.open_deck_builder()
+	
 	var cam = player.get_node("SpringArm3D/Camera3D")
 	cam.reparent(player.get_parent(), true)
 	
@@ -46,7 +49,7 @@ func join_game(player, seat_number):
 	tween.tween_property(cam, "global_rotation", target_cam_pos.global_rotation, 1.2)
 	player.is_movement_locked = true
 	player.velocity = Vector3.ZERO
-
+	
 func remove_player(player):
 	if player_1 == player:
 		player_1 = null

@@ -7,8 +7,10 @@ const ZOOM_SPEED = 0.5
 const MIN_ZOOM = 1.0
 const MAX_ZOOM = 5.0
 
+var selected_deck_buttons: Array[TextureButton] = []
+var card_scene = preload("res://card.tscn")
 var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
-
+var pack_cost: int = 1
 var is_right_clicking: bool = false
 var is_playing_minigame: bool = false
 var current_station = null
@@ -22,7 +24,7 @@ var beer_cooldown_timer: float = 0.0
 var base_beer_cooldown: float = 5.0
 var cooldown_multiplier: float = 1.0
 var notification_id: int = 0
-
+var active_deck: Array[CardData] = []
 var is_wager_menu_open: bool = false
 var proposed_wager: int = 0
 var opponent_wager: int = 0
@@ -31,6 +33,7 @@ var wager_locked_in: bool = false
 var inventory: Array[CardData] = []
 var bag_scene = preload("res://cornhole_bag.tscn")
 
+@onready var cards_grid = $CanvasLayer/InventoryPopup/TabContainer/Cards/ScrollContainer/CardsGrid
 @onready var score_ui = $CanvasLayer/ScoreUI
 @onready var wager_popup = $CanvasLayer/WagerPopup
 @onready var wager_input = $CanvasLayer/WagerPopup/VBoxContainer/WagerInput
@@ -49,6 +52,10 @@ var bag_scene = preload("res://cornhole_bag.tscn")
 @onready var caps_label = $CanvasLayer/InventoryPopup/CapsLabel
 @onready var anim_player = $FixedModel/AnimationPlayer
 @onready var model = $FixedModel
+@onready var deck_popup = $CanvasLayer/DeckSelectionPopup
+@onready var deck_grid = $CanvasLayer/DeckSelectionPopup/ScrollContainer/DeckGrid
+@onready var confirm_deck_btn = $CanvasLayer/DeckSelectionPopup/ConfirmDeckButton
+
 
 func _enter_tree():
 	set_multiplayer_authority(str(name).to_int())
@@ -63,6 +70,11 @@ func _ready():
 		return
 	if score_ui: 
 		score_ui.visible = false
+	deck_popup.visible = false
+	
+	var confirm_btn = find_child("ConfirmDeckButton", true, false)
+	if confirm_btn and not confirm_btn.pressed.is_connected(_on_confirm_deck_pressed):
+		confirm_btn.pressed.connect(_on_confirm_deck_pressed)
 		
 	var my_camera = find_child("Camera3D", true, false)
 	if my_camera:
@@ -102,6 +114,11 @@ func _ready():
 	if play_alone_btn and not play_alone_btn.pressed.is_connected(_on_play_alone_pressed):
 		play_alone_btn.pressed.connect(_on_play_alone_pressed)
 		
+	# --- SHOP UI CONNECTIONS ---
+	var buy_pack_btn = find_child("BuyPackButton", true, false)
+	if buy_pack_btn and not buy_pack_btn.pressed.is_connected(_on_buy_pack_pressed):
+		buy_pack_btn.pressed.connect(_on_buy_pack_pressed)
+		
 	multiplayer.peer_disconnected.connect(_on_peer_disconnected_wager_check)
 
 func _input(event):
@@ -120,12 +137,13 @@ func _input(event):
 	if event is InputEventKey and event.physical_keycode == KEY_F and event.pressed and not event.echo:
 		if is_playing_minigame or is_media_menu_open or is_notebook_open:
 			return
-			
+		
 		is_inventory_open = !is_inventory_open
 		update_caps_display()
 		inventory_popup.visible = is_inventory_open
 		
 		if is_inventory_open:
+			update_inventory_ui()
 			Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 			if crosshair: crosshair.visible = false
 		else:
@@ -542,3 +560,180 @@ func bag_thrown(bag: Node3D):
 func update_score_ui(p1_score: int, p2_score: int):
 	if score_ui:
 		score_ui.text = "Player 1: " + str(p1_score) + " | Player 2: " + str(p2_score)
+# --- SHOP & INVENTORY LOGIC ---
+
+func _on_buy_pack_pressed():
+	if bottle_caps >= pack_cost:
+		# 1. Deduct the caps and update the UI
+		bottle_caps -= pack_cost
+		update_caps_display()
+		
+		# 2. Roll 3 random cards
+		var pulled_cards = []
+		for i in range(3):
+			# This assumes you created the CardDatabase Autoload from earlier!
+			var random_card = CardDatabase.get_random_card()
+			pulled_cards.append(random_card)
+			add_card_to_inventory(random_card)
+			
+		# 3. Show the player what they got using your notification system
+		var result_text = "Pack Opened: " + pulled_cards[0].card_name + ", " + pulled_cards[1].card_name + ", " + pulled_cards[2].card_name
+		show_notification(result_text)
+		print(result_text)
+		update_inventory_ui()
+	else:
+		# Broke!
+		show_notification("Not enough caps! You need " + str(pack_cost) + " to buy a pack.")
+func update_inventory_ui():
+	if not cards_grid: return
+	
+	# 1. Clear out the old UI elements so we don't duplicate them
+	for child in cards_grid.get_children():
+		child.queue_free()
+		
+	# 2. Loop through your actual inventory array
+	for card in inventory:
+		var card_img = TextureRect.new()
+		
+		# IMPORTANT: Change "card_texture" to whatever the image variable 
+		# is actually named inside your CardData resource script!
+		card_img.texture = card.card_texture
+		
+		# 3. Format the image so it fits neatly in the grid
+		card_img.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		card_img.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		card_img.custom_minimum_size = Vector2(80, 120) # Adjust based on your art's aspect ratio
+		
+		# 4. Add it to the grid
+		cards_grid.add_child(card_img)
+		
+# --- DECK SELECTION LOGIC ---
+
+func open_deck_builder():
+	active_deck.clear()
+	deck_popup.visible = true
+	confirm_deck_btn.disabled = true
+	
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	if crosshair: crosshair.visible = false
+	
+	# Clear old buttons
+	for child in deck_grid.get_children():
+		child.queue_free()
+		
+	# Create a clickable button for every card in inventory
+	for card in inventory:
+		var btn = TextureButton.new()
+		
+		# IMPORTANT: Use the exact variable name you found in card_data.gd (e.g., card.art)
+		btn.texture_normal = card.card_texture
+		
+		btn.ignore_texture_size = true
+		btn.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
+		btn.custom_minimum_size = Vector2(80, 120)
+		
+		# Connect the click event and pass the specific card and button
+		btn.pressed.connect(func(): _on_deck_card_toggled(card, btn))
+		deck_grid.add_child(btn)
+
+func _on_deck_card_toggled(card: CardData, btn: TextureButton):
+	# Check if this specific BUTTON is already selected
+	if selected_deck_buttons.has(btn):
+		selected_deck_buttons.erase(btn)
+		
+		# Safely remove only ONE instance of this card from the active deck
+		active_deck.remove_at(active_deck.find(card)) 
+		btn.modulate = Color(1, 1, 1, 1) # Return to normal color
+	else:
+		if active_deck.size() < 3:
+			selected_deck_buttons.append(btn)
+			active_deck.append(card)
+			btn.modulate = Color(0.5, 1, 0.5, 1) # Tint green
+			
+	if active_deck.size() == 3:
+		confirm_deck_btn.disabled = false
+		confirm_deck_btn.text = "Spawn Deck!"
+	else:
+		confirm_deck_btn.disabled = true
+		confirm_deck_btn.text = "Choose 3 (" + str(active_deck.size()) + "/3)"
+		
+func _on_confirm_deck_pressed():
+	deck_popup.visible = false
+	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	if crosshair: crosshair.visible = true
+	
+	var deck_paths = []
+	var deck_names = [] 
+	
+	for card in active_deck:
+		deck_paths.append(card.resource_path)
+		var unique_name = "Card_" + str(multiplayer.get_unique_id()) + "_" + str(Time.get_ticks_usec() + randi() % 1000)
+		deck_names.append(unique_name)
+		
+		var inv_index = inventory.find(card)
+		if inv_index != -1:
+			inventory.remove_at(inv_index)
+			
+	update_inventory_ui() 
+	selected_deck_buttons.clear() 
+	
+	var my_seat = 1
+	var table_path_str = ""
+	
+	if current_station:
+		# Capture the absolute path as a raw string so it never fails over the network!
+		table_path_str = str(current_station.get_path())
+		
+		if current_station.get("player_2") == self:
+			my_seat = 2
+		
+	rpc("sync_spawn_deck", deck_paths, deck_names, my_seat, table_path_str)
+	
+@rpc("any_peer", "call_local", "reliable")
+func sync_spawn_deck(card_paths: Array, card_names: Array, owner_seat_id: int, table_path_str: String):
+	# 1. Instantly find the exact table using the foolproof text path
+	var station = get_node_or_null(table_path_str)
+	
+	if not station:
+		print("ERROR: Opponent could not find the table at path: ", table_path_str)
+		return
+		
+	# 2. Find the exact physical seat node to guarantee perfectly synced math
+	var target_seat = station.get_node_or_null("seat_position_" + str(owner_seat_id))
+	if not target_seat:
+		print("ERROR: Could not find seat_position_" + str(owner_seat_id))
+		return
+
+	for i in range(card_paths.size()):
+		var new_card = card_scene.instantiate()
+		new_card.name = card_names[i]
+		
+		var loaded_data = load(card_paths[i])
+		new_card.data = loaded_data 
+		new_card.owner_seat = owner_seat_id
+		
+		station.add_child(new_card)
+			
+		if new_card.has_method("initialize_card"):
+			new_card.initialize_card()
+			
+		# --- BULLETPROOF SYNCHRONIZED MATH ---
+		var table_center = station.global_position
+		
+		# Draw a line from the table center to the exact seat position
+		var dir_to_seat = (target_seat.global_position - table_center).normalized()
+		dir_to_seat.y = 0 
+		
+		# Push the cards 0.6 meters from the center toward the seat
+		var base_pos = table_center + (dir_to_seat * 0.6)
+		base_pos.y = table_center.y + 0.85 
+		
+		# Calculate "right" based on the seat's transform so spacing is correct
+		var right = target_seat.global_transform.basis.x.normalized()
+		var spacing = (i - 1) * 0.35 
+		
+		new_card.global_position = base_pos + (right * spacing)
+		
+		# The 180-degree flip is preserved so they face the owner
+		new_card.global_rotation = Vector3(deg_to_rad(-90), target_seat.global_rotation.y + deg_to_rad(180), 0)
+		new_card.scale = Vector3(0.03, 0.03, 0.03)
