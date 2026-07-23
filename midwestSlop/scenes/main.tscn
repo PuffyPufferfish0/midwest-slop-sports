@@ -66,7 +66,7 @@ albedo_texture = ExtResource("4_c6pm6")
 uv1_scale = Vector3(0.2, 0.2, 0.2)
 uv1_triplanar = true
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_chjal"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_5poiv"]
 render_priority = 0
 shader = ExtResource("5_5he1u")
 shader_parameter/albedo = Color(1, 1, 1, 1)
@@ -1586,7 +1586,7 @@ size = Vector3(50, 4, 50)
 material = SubResource("StandardMaterial3D_85g3d")
 
 [node name="SimpleGrassTextured" type="MultiMeshInstance3D" parent="Level" unique_id=1059472916]
-material_override = SubResource("ShaderMaterial_chjal")
+material_override = SubResource("ShaderMaterial_5poiv")
 multimesh = SubResource("MultiMesh_jkv2x")
 script = ExtResource("8_chjal")
 roughness = 0.32
@@ -1891,22 +1891,22 @@ shape = SubResource("BoxShape3D_qkpxi")
 [node name="roundTable" parent="Level/picnic_table" unique_id=1276356781 instance=ExtResource("16_bjg73")]
 transform = Transform3D(0.004, 0, 0, 0, 0.004, 0, 0, 0, 0.004, 1.7519054, 0.400859, -1.003139)
 
-[node name="SnapPoint" parent="Level/picnic_table" unique_id=176595550 instance=ExtResource("17_5poiv")]
+[node name="SnapPoint" parent="Level/picnic_table" unique_id=176595550 groups=["front_snap_points", "snap_points"] instance=ExtResource("17_5poiv")]
 transform = Transform3D(0.2857143, 0, 0, 0, 0.2857143, 0, 0, 0, 0.2857143, -0.22935522, 0.531718, 0.059599876)
 
-[node name="SnapPoint2" parent="Level/picnic_table" unique_id=1588179337 instance=ExtResource("17_5poiv")]
+[node name="SnapPoint2" parent="Level/picnic_table" unique_id=1588179337 groups=["front_snap_points", "snap_points"] instance=ExtResource("17_5poiv")]
 transform = Transform3D(0.2857143, 0, 0, 0, 0.2857143, 0, 0, 0, 0.2857143, -0.12166435, 0.5317181, 0.059599876)
 
-[node name="SnapPoint3" parent="Level/picnic_table" unique_id=1268987282 instance=ExtResource("17_5poiv")]
+[node name="SnapPoint3" parent="Level/picnic_table" unique_id=1268987282 groups=["front_snap_points", "snap_points"] instance=ExtResource("17_5poiv")]
 transform = Transform3D(0.2857143, 0, 0, 0, 0.2857143, 0, 0, 0, 0.2857143, 0.023366012, 0.53171813, 0.059599876)
 
-[node name="SnapPoint4" parent="Level/picnic_table" unique_id=2086950947 instance=ExtResource("17_5poiv")]
+[node name="SnapPoint4" parent="Level/picnic_table" unique_id=2086950947 groups=["snap_points"] instance=ExtResource("17_5poiv")]
 transform = Transform3D(0.2857143, 0, 0, 0, 0.2857143, 0, 0, 0, 0.2857143, 0.023366015, 0.53171813, -0.2032938)
 
-[node name="SnapPoint5" parent="Level/picnic_table" unique_id=1339355445 instance=ExtResource("17_5poiv")]
+[node name="SnapPoint5" parent="Level/picnic_table" unique_id=1339355445 groups=["snap_points"] instance=ExtResource("17_5poiv")]
 transform = Transform3D(0.2857143, 0, 0, 0, 0.2857143, 0, 0, 0, 0.2857143, -0.13014272, 0.53171813, -0.2032938)
 
-[node name="SnapPoint6" parent="Level/picnic_table" unique_id=867639820 instance=ExtResource("17_5poiv")]
+[node name="SnapPoint6" parent="Level/picnic_table" unique_id=867639820 groups=["snap_points"] instance=ExtResource("17_5poiv")]
 transform = Transform3D(0.2857143, 0, 0, 0, 0.2857143, 0, 0, 0, 0.2857143, -0.29455093, 0.53171813, -0.2032938)
 
 [node name="Card" parent="Level/picnic_table" unique_id=265594081 instance=ExtResource("18_2cjbq")]

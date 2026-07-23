@@ -1486,6 +1486,7 @@ offset_right = 584.0
 offset_bottom = 315.0
 size_flags_horizontal = 4
 size_flags_vertical = 4
+mouse_filter = 1
 
 [node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/QuitMinigamePopup" unique_id=1331868279]
 layout_mode = 0
@@ -1494,10 +1495,12 @@ offset_bottom = 40.0
 
 [node name="YesButton" type="Button" parent="CanvasLayer/QuitMinigamePopup/HBoxContainer" unique_id=770649791]
 layout_mode = 2
+mouse_filter = 1
 text = "Yes"
 
 [node name="NoButton" type="Button" parent="CanvasLayer/QuitMinigamePopup/HBoxContainer" unique_id=443021795]
 layout_mode = 2
+mouse_filter = 1
 text = "No"
 
 [node name="areyousure" type="Label" parent="CanvasLayer/QuitMinigamePopup" unique_id=1767048372]
@@ -1507,6 +1510,7 @@ offset_left = -69.0
 offset_top = -29.0
 offset_right = 164.0
 offset_bottom = -6.0
+mouse_filter = 1
 text = "are you sure you want to exit?"
 
 [node name="Crosshair" type="ColorRect" parent="CanvasLayer" unique_id=1183141828]
@@ -1522,6 +1526,7 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
+mouse_filter = 1
 
 [node name="InventoryPopup" type="Panel" parent="CanvasLayer" unique_id=620484754]
 anchors_preset = 8
@@ -1535,6 +1540,7 @@ offset_right = 250.0
 offset_bottom = 150.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 1
 
 [node name="TabContainer" type="TabContainer" parent="CanvasLayer/InventoryPopup" unique_id=827936167]
 layout_mode = 1
@@ -1549,21 +1555,25 @@ current_tab = 0
 
 [node name="Cards" type="Control" parent="CanvasLayer/InventoryPopup/TabContainer" unique_id=536047030]
 layout_mode = 2
+mouse_filter = 1
 metadata/_tab_index = 0
 
 [node name="Vanity" type="Control" parent="CanvasLayer/InventoryPopup/TabContainer" unique_id=1251381439]
 visible = false
 layout_mode = 2
+mouse_filter = 1
 metadata/_tab_index = 1
 
 [node name="skins" type="Control" parent="CanvasLayer/InventoryPopup/TabContainer" unique_id=1041898105]
 visible = false
 layout_mode = 2
+mouse_filter = 1
 metadata/_tab_index = 2
 
 [node name="shop" type="Control" parent="CanvasLayer/InventoryPopup/TabContainer" unique_id=191560347]
 visible = false
 layout_mode = 2
+mouse_filter = 1
 metadata/_tab_index = 3
 
 [node name="CapsLabel" type="Label" parent="CanvasLayer/InventoryPopup" unique_id=1869260110]
@@ -1574,6 +1584,7 @@ anchor_right = 1.0
 offset_left = -40.0
 offset_bottom = 23.0
 grow_horizontal = 0
+mouse_filter = 1
 
 [node name="MediaPopup" type="Panel" parent="CanvasLayer" unique_id=1284220994]
 anchors_preset = 8
@@ -1587,6 +1598,7 @@ offset_right = 251.5
 offset_bottom = 152.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 1
 
 [node name="ScrollContainer" type="ScrollContainer" parent="CanvasLayer/MediaPopup" unique_id=379321448]
 layout_mode = 0
@@ -1608,6 +1620,7 @@ offset_top = -8.0
 offset_right = 10.0
 grow_horizontal = 2
 grow_vertical = 0
+mouse_filter = 1
 text = "Close
 "
 
@@ -1624,12 +1637,14 @@ grow_vertical = 0
 
 [node name="StopButton" type="Button" parent="CanvasLayer/MediaPopup/HBoxContainer" unique_id=527546601]
 layout_mode = 2
+mouse_filter = 1
 text = "Stop Playback
 "
 
 [node name="VolumeSlider" type="HSlider" parent="CanvasLayer/MediaPopup/HBoxContainer" unique_id=107680544]
 layout_mode = 2
 size_flags_horizontal = 3
+mouse_filter = 1
 max_value = 1.0
 step = 0.05
 value = 1.0
@@ -1646,11 +1661,13 @@ offset_right = 250.0
 offset_bottom = 300.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 1
 
 [node name="Label" type="Label" parent="CanvasLayer/NotebookPopup" unique_id=1897823425]
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 23.0
+mouse_filter = 1
 
 [node name="CloseNotebookButton" type="Button" parent="CanvasLayer/NotebookPopup" unique_id=1101486235]
 layout_mode = 1
@@ -1660,6 +1677,7 @@ anchor_right = 1.0
 offset_left = -48.0
 offset_bottom = 31.0
 grow_horizontal = 0
+mouse_filter = 1
 text = "close"
 
 [node name="TabContainer" type="TabContainer" parent="CanvasLayer/NotebookPopup" unique_id=189399336]
@@ -1673,6 +1691,7 @@ current_tab = 0
 
 [node name="Media" type="RichTextLabel" parent="CanvasLayer/NotebookPopup/TabContainer" unique_id=1546499829]
 layout_mode = 2
+mouse_filter = 1
 text = "
 
 To use the Sloppy Media system, simply interact with the porch radio, or press [M].
@@ -1687,16 +1706,19 @@ metadata/_tab_index = 0
 [node name="Cards" type="RichTextLabel" parent="CanvasLayer/NotebookPopup/TabContainer" unique_id=906434704]
 visible = false
 layout_mode = 2
+mouse_filter = 1
 metadata/_tab_index = 1
 
 [node name="Cornhole" type="RichTextLabel" parent="CanvasLayer/NotebookPopup/TabContainer" unique_id=128848705]
 visible = false
 layout_mode = 2
+mouse_filter = 1
 metadata/_tab_index = 2
 
 [node name="Disc golf" type="RichTextLabel" parent="CanvasLayer/NotebookPopup/TabContainer" unique_id=1829361053]
 visible = false
 layout_mode = 2
+mouse_filter = 1
 metadata/_tab_index = 3
 
 [node name="NotificationLabel" type="Label" parent="CanvasLayer" unique_id=515535069]
@@ -1712,6 +1734,7 @@ offset_right = 20.0
 offset_bottom = 11.5
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 1
 label_settings = SubResource("LabelSettings_3vyb7")
 horizontal_alignment = 1
 
@@ -1727,6 +1750,7 @@ offset_right = 20.0
 offset_bottom = 20.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 1
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/WagerPopup" unique_id=816044017]
 layout_mode = 0
@@ -1735,31 +1759,37 @@ offset_bottom = 40.0
 
 [node name="Title" type="Label" parent="CanvasLayer/WagerPopup/VBoxContainer" unique_id=903008500]
 layout_mode = 2
+mouse_filter = 1
 text = "Place your Wager"
 horizontal_alignment = 1
 
 [node name="WagerInput" type="LineEdit" parent="CanvasLayer/WagerPopup/VBoxContainer" unique_id=202734507]
 layout_mode = 2
+mouse_filter = 1
 placeholder_text = "Enter Caps to bet"
 
 [node name="ProposeButton" type="Button" parent="CanvasLayer/WagerPopup/VBoxContainer" unique_id=1674349665]
 layout_mode = 2
+mouse_filter = 1
 text = "Propose Wager
 "
 
 [node name="AcceptButton" type="Button" parent="CanvasLayer/WagerPopup/VBoxContainer" unique_id=489881993]
 layout_mode = 2
+mouse_filter = 1
 disabled = true
 text = "Accept the wager
 "
 
 [node name="StatusLabel" type="Label" parent="CanvasLayer/WagerPopup/VBoxContainer" unique_id=688852273]
 layout_mode = 2
+mouse_filter = 1
 text = "Waiting for input"
 horizontal_alignment = 1
 
 [node name="PlayAloneButton" type="Button" parent="CanvasLayer/WagerPopup/VBoxContainer" unique_id=281864753]
 layout_mode = 2
+mouse_filter = 1
 text = "Play Alone"
 
 [node name="ScoreUI" type="Label" parent="CanvasLayer" unique_id=1080469313]
@@ -1770,6 +1800,7 @@ offset_left = -20.0
 offset_right = 20.0
 offset_bottom = 23.0
 grow_horizontal = 2
+mouse_filter = 1
 text = "Player 1: 0 | Player 2: 0"
 
 [connection signal="pressed" from="CanvasLayer/QuitMinigamePopup/HBoxContainer/YesButton" to="." method="_on_yes_button_pressed"]

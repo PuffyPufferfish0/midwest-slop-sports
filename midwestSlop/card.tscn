@@ -2,6 +2,8 @@
 
 [ext_resource type="Script" uid="uid://ifobldctxvnt" path="res://card.gd" id="1_kikvd"]
 
+[sub_resource type="ArrayMesh" id="ArrayMesh_kfoul"]
+
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0pldf"]
 resource_name = "Material"
 cull_mode = 2
@@ -42,11 +44,14 @@ blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_gb6js")
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_hhp00"]
+size = Vector3(5, 0.5, 3.5)
 
 [node name="Card" type="Area3D" unique_id=265594081]
+collision_layer = 2
 script = ExtResource("1_kikvd")
 
 [node name="blank_card" type="MeshInstance3D" parent="." unique_id=504975451]
+mesh = SubResource("ArrayMesh_kfoul")
 
 [node name="Cube" type="MeshInstance3D" parent="blank_card" unique_id=934579466]
 transform = Transform3D(2.5, 0, 0, 0, 0.05, 0, 0, 0, 1.75, 0, 0, 0)
@@ -58,6 +63,5 @@ transform = Transform3D(-0.2908647, 0.56639326, 0.7711009, -0.055189073, 0.79467
 [node name="Camera" type="Node3D" parent="blank_card" unique_id=607238278]
 transform = Transform3D(0.68592066, 0.6515582, 0.3240135, 0, 0.44527137, -0.89539564, -0.7276764, 0.61417043, 0.30542088, 7.3588915, 4.958309, 6.925791)
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="blank_card" unique_id=71236624]
-transform = Transform3D(5, 0, 0, 0, 0.25, 0, 0, 0, 3.5, 0, 0, 0)
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=71236624]
 shape = SubResource("BoxShape3D_hhp00")
