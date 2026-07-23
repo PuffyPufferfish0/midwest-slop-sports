@@ -16,6 +16,7 @@ var current_attack: int
 
 var is_dragging: bool = false
 var drag_plane_y: float = 0.0
+var base_y: float = 0.0
 
 func _ready():
 	if data:
@@ -44,29 +45,26 @@ func _input(event):
 		# LEFT CLICK DOWN
 		if event.pressed:
 			var mouse_pos = get_viewport().get_mouse_position()
-			
 			var ray_query = PhysicsRayQueryParameters3D.new()
 			ray_query.from = active_cam.project_ray_origin(mouse_pos)
 			ray_query.to = ray_query.from + active_cam.project_ray_normal(mouse_pos) * 1000.0
-			
-			# Tell the ray to look for Area3D nodes
 			ray_query.collide_with_areas = true 
-			
-			# CRITICAL: Tell the raycast to ONLY look at Collision Layer 2!
-			# (This mathematically equals 2, ignoring Layer 1 snap points entirely)
 			ray_query.collision_mask = 2
 			
 			var space_state = get_world_3d().direct_space_state
 			var result = space_state.intersect_ray(ray_query)
 			
-			# If the ray hit a card on Layer 2, and it's THIS card
 			if result and result.collider == self:
-				is_dragging = true
-				drag_plane_y = global_position.y
-				global_position.y += 0.1
-				
-				# Tell the opponent we picked it up!
-				rpc("update_drag_position", global_position)
+				# ATTACK MODE (Holding Shift)
+				if Input.is_key_pressed(KEY_SHIFT):
+					#print("Targeted card: ", data.card_name, " (Health: ", current_health, " | Attack: ", current_attack, ")")
+					get_tree().call_group("card_table", "handle_card_clicked", self, multiplayer.get_unique_id())
+				# DRAG MODE (Just Clicking)
+				else:
+					is_dragging = true
+					drag_plane_y = global_position.y
+					global_position.y += 0.1
+					rpc("update_drag_position", global_position)
 				
 		# LEFT CLICK RELEASE
 		else:
@@ -149,3 +147,26 @@ func update_drag_position(new_pos: Vector3):
 func update_snap_state(final_pos: Vector3, final_rot: Vector3):
 	global_position = final_pos
 	global_rotation = final_rot
+	
+# --- NETWORK COMBAT FUNCTIONS ---
+
+@rpc("any_peer", "call_local", "reliable")
+func sync_take_damage(amount: int):
+	current_health -= amount
+	
+	# Update both health labels on everyone's screen
+	health_label_bottom.text = str(current_health)
+	health_label_top.text = str(current_health)
+
+@rpc("any_peer", "call_local", "reliable")
+func sync_destroy():
+	# Removes the card from the 3D world for everyone
+	queue_free()
+func set_selected(selected: bool):
+	if selected:
+		# Remember the height and float up 0.2 meters
+		base_y = global_position.y
+		global_position.y += 0.2
+	else:
+		# Drop back down to the resting height
+		global_position.y = base_y
