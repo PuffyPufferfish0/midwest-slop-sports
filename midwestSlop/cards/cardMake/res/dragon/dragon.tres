@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="CardData" format=3 uid="uid://bgqsfvyohoy7o"]
+
+[ext_resource type="Texture2D" uid="uid://k1l7544agfnd" path="res://cards/cardMake/res/dragon/dragon.png" id="1_un03u"]
+[ext_resource type="Script" uid="uid://dgobdlobxoext" path="res://card_data.gd" id="2_6g4vd"]
+
+[resource]
+script = ExtResource("2_6g4vd")
+card_name = "dragon"
+card_texture = ExtResource("1_un03u")
+base_attack = 5
+base_health = 5
+rarity = "Rare"
+metadata/_custom_type_script = "uid://dgobdlobxoext"

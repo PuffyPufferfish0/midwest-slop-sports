@@ -1314,6 +1314,17 @@ shadow_mesh = SubResource("ArrayMesh_hiv2m")
 [sub_resource type="BoxShape3D" id="BoxShape3D_qkpxi"]
 size = Vector3(0.5, 0.5, 0.5)
 
+[sub_resource type="TorusMesh" id="TorusMesh_2282s"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_hhp00"]
+transparency = 1
+albedo_color = Color(0.14509805, 0.73333335, 0.9372549, 0.4392157)
+metallic = 0.53
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5poiv"]
+transparency = 1
+albedo_color = Color(1, 0.42745098, 1, 0.5921569)
+
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_w1wq0"]
 resource_name = "BumpyWhite"
 cull_mode = 2
@@ -1891,23 +1902,53 @@ shape = SubResource("BoxShape3D_qkpxi")
 [node name="roundTable" parent="Level/picnic_table" unique_id=1276356781 instance=ExtResource("16_bjg73")]
 transform = Transform3D(0.004, 0, 0, 0, 0.004, 0, 0, 0, 0.004, 1.7519054, 0.400859, -1.003139)
 
-[node name="SnapPoint" parent="Level/picnic_table" unique_id=176595550 groups=["front_snap_points", "snap_points"] instance=ExtResource("17_5poiv")]
-transform = Transform3D(0.2857143, 0, 0, 0, 0.2857143, 0, 0, 0, 0.2857143, -0.22935522, 0.531718, 0.059599876)
+[node name="SnapPoint" parent="Level/picnic_table" unique_id=176595550 groups=["seat_1_snaps", "snap_points"] instance=ExtResource("17_5poiv")]
+transform = Transform3D(0.2857143, 0, 0, 0, 0.2857143, 0, 0, 0, 0.2857143, -0.20000002, 0.53200006, 0.1)
 
-[node name="SnapPoint2" parent="Level/picnic_table" unique_id=1588179337 groups=["front_snap_points", "snap_points"] instance=ExtResource("17_5poiv")]
-transform = Transform3D(0.2857143, 0, 0, 0, 0.2857143, 0, 0, 0, 0.2857143, -0.12166435, 0.5317181, 0.059599876)
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Level/picnic_table/SnapPoint" unique_id=1961436776]
+transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 0, -0.07736771, 0)
+mesh = SubResource("TorusMesh_2282s")
+surface_material_override/0 = SubResource("StandardMaterial3D_hhp00")
 
-[node name="SnapPoint3" parent="Level/picnic_table" unique_id=1268987282 groups=["front_snap_points", "snap_points"] instance=ExtResource("17_5poiv")]
-transform = Transform3D(0.2857143, 0, 0, 0, 0.2857143, 0, 0, 0, 0.2857143, 0.023366012, 0.53171813, 0.059599876)
+[node name="SnapPoint2" parent="Level/picnic_table" unique_id=1588179337 groups=["seat_1_snaps", "snap_points"] instance=ExtResource("17_5poiv")]
+transform = Transform3D(0.2857143, 0, 0, 0, 0.2857143, 0, 0, 0, 0.2857143, 0, 0.53200006, 0.1)
 
-[node name="SnapPoint4" parent="Level/picnic_table" unique_id=2086950947 groups=["snap_points"] instance=ExtResource("17_5poiv")]
-transform = Transform3D(0.2857143, 0, 0, 0, 0.2857143, 0, 0, 0, 0.2857143, 0.023366015, 0.53171813, -0.2032938)
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Level/picnic_table/SnapPoint2" unique_id=921491960]
+transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 0, -0.07736771, 0)
+mesh = SubResource("TorusMesh_2282s")
+surface_material_override/0 = SubResource("StandardMaterial3D_hhp00")
 
-[node name="SnapPoint5" parent="Level/picnic_table" unique_id=1339355445 groups=["snap_points"] instance=ExtResource("17_5poiv")]
-transform = Transform3D(0.2857143, 0, 0, 0, 0.2857143, 0, 0, 0, 0.2857143, -0.13014272, 0.53171813, -0.2032938)
+[node name="SnapPoint3" parent="Level/picnic_table" unique_id=1268987282 groups=["seat_1_snaps", "snap_points"] instance=ExtResource("17_5poiv")]
+transform = Transform3D(0.2857143, 0, 0, 0, 0.2857143, 0, 0, 0, 0.2857143, 0.20000002, 0.53200006, 0.1)
 
-[node name="SnapPoint6" parent="Level/picnic_table" unique_id=867639820 groups=["snap_points"] instance=ExtResource("17_5poiv")]
-transform = Transform3D(0.2857143, 0, 0, 0, 0.2857143, 0, 0, 0, 0.2857143, -0.29455093, 0.53171813, -0.2032938)
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Level/picnic_table/SnapPoint3" unique_id=696563245]
+transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 0, -0.07736771, 0)
+mesh = SubResource("TorusMesh_2282s")
+surface_material_override/0 = SubResource("StandardMaterial3D_hhp00")
+
+[node name="SnapPoint4" parent="Level/picnic_table" unique_id=2086950947 groups=["seat_2_snaps", "snap_points"] instance=ExtResource("17_5poiv")]
+transform = Transform3D(0.2857143, 0, 0, 0, 0.2857143, 0, 0, 0, 0.2857143, 0.2, 0.532, -0.1)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Level/picnic_table/SnapPoint4" unique_id=1591454654]
+transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 0, -0.07736771, 0)
+mesh = SubResource("TorusMesh_2282s")
+surface_material_override/0 = SubResource("StandardMaterial3D_5poiv")
+
+[node name="SnapPoint5" parent="Level/picnic_table" unique_id=1339355445 groups=["seat_2_snaps", "snap_points"] instance=ExtResource("17_5poiv")]
+transform = Transform3D(0.2857143, 0, 0, 0, 0.2857143, 0, 0, 0, 0.2857143, 0, 0.532, -0.1)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Level/picnic_table/SnapPoint5" unique_id=992304212]
+transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 0, -0.07736771, 0)
+mesh = SubResource("TorusMesh_2282s")
+surface_material_override/0 = SubResource("StandardMaterial3D_5poiv")
+
+[node name="SnapPoint6" parent="Level/picnic_table" unique_id=867639820 groups=["seat_2_snaps", "snap_points"] instance=ExtResource("17_5poiv")]
+transform = Transform3D(0.2857143, 0, 0, 0, 0.2857143, 0, 0, 0, 0.2857143, -0.2, 0.532, -0.1)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Level/picnic_table/SnapPoint6" unique_id=1277792939]
+transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 0, -0.07736771, 0)
+mesh = SubResource("TorusMesh_2282s")
+surface_material_override/0 = SubResource("StandardMaterial3D_5poiv")
 
 [node name="Card" parent="Level/picnic_table" unique_id=265594081 instance=ExtResource("18_2cjbq")]
 transform = Transform3D(-1.3113418e-09, 0, 0.030000005, 0, 0.030000007, 0, -0.030000005, 0, -1.3113418e-09, -0.27832353, 0.5308999, -0.036114693)

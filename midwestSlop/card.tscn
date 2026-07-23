@@ -1,6 +1,8 @@
 [gd_scene format=4 uid="uid://dfu2h3bl33tj4"]
 
 [ext_resource type="Script" uid="uid://ifobldctxvnt" path="res://card.gd" id="1_kikvd"]
+[ext_resource type="Resource" uid="uid://u4yp034j7gyv" path="res://cards/cardMake/res/wizard/wizard.tres" id="2_rjlel"]
+[ext_resource type="Texture2D" uid="uid://btlqur26r85a7" path="res://cards/cardMake/res/wizard/wizard.png" id="3_q5obu"]
 
 [sub_resource type="ArrayMesh" id="ArrayMesh_kfoul"]
 
@@ -49,6 +51,7 @@ size = Vector3(5, 0.5, 3.5)
 [node name="Card" type="Area3D" unique_id=265594081]
 collision_layer = 2
 script = ExtResource("1_kikvd")
+data = ExtResource("2_rjlel")
 
 [node name="blank_card" type="MeshInstance3D" parent="." unique_id=504975451]
 mesh = SubResource("ArrayMesh_kfoul")
@@ -62,6 +65,44 @@ transform = Transform3D(-0.2908647, 0.56639326, 0.7711009, -0.055189073, 0.79467
 
 [node name="Camera" type="Node3D" parent="blank_card" unique_id=607238278]
 transform = Transform3D(0.68592066, 0.6515582, 0.3240135, 0, 0.44527137, -0.89539564, -0.7276764, 0.61417043, 0.30542088, 7.3588915, 4.958309, 6.925791)
+
+[node name="CardArt" type="Sprite3D" parent="blank_card" unique_id=1856881530]
+transform = Transform3D(-2.1855694e-08, 0.5, 2.1855694e-08, 0, -2.1855694e-08, 0.5, 0.5, 2.1855694e-08, 9.553427e-16, 0, 0.1, 0)
+texture = ExtResource("3_q5obu")
+
+[node name="AttackLabelBottom" type="Label3D" parent="blank_card" unique_id=1119928422]
+transform = Transform3D(-4.371139e-08, 1, 0, 4.371139e-08, 1.9106855e-15, 1, 1, 4.371139e-08, -4.371139e-08, -1.6, 0.27, 0.7)
+double_sided = false
+no_depth_test = true
+modulate = Color(0.6627451, 0, 0, 1)
+text = "1
+"
+font_size = 100
+
+[node name="HealthLabelBottom" type="Label3D" parent="blank_card" unique_id=1890277509]
+transform = Transform3D(-4.371139e-08, 1, 0, 4.371139e-08, 1.9106855e-15, 1, 1, 4.371139e-08, -4.371139e-08, -1.6, 0.27, -0.7)
+double_sided = false
+no_depth_test = true
+modulate = Color(0, 0, 0.6627451, 1)
+text = "2"
+font_size = 100
+
+[node name="AttackLabelTop" type="Label3D" parent="blank_card" unique_id=1718420630]
+transform = Transform3D(-4.371139e-08, -1, 0, -4.371139e-08, 1.9106855e-15, 1, -1, 4.371139e-08, -4.371139e-08, 1.6, 0.27, -0.7)
+double_sided = false
+no_depth_test = true
+modulate = Color(0.6627451, 0, 0, 1)
+text = "1
+"
+font_size = 100
+
+[node name="HealthLabelTop" type="Label3D" parent="blank_card" unique_id=1715923969]
+transform = Transform3D(-4.371139e-08, -1, 0, -4.371139e-08, 1.9106855e-15, 1, -1, 4.371139e-08, -4.371139e-08, 1.6, 0.27, 0.7)
+double_sided = false
+no_depth_test = true
+modulate = Color(0, 0, 0.6627451, 1)
+text = "2"
+font_size = 100
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=71236624]
 shape = SubResource("BoxShape3D_hhp00")

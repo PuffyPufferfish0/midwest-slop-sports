@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="CardData" format=3 uid="uid://b8mymioja4msc"]
+
+[ext_resource type="Texture2D" uid="uid://bque1yjqytnym" path="res://cards/cardMake/res/scaredGoblin/scaredGoblin.png" id="1_w5r4s"]
+[ext_resource type="Script" uid="uid://dgobdlobxoext" path="res://card_data.gd" id="2_6g4vd"]
+
+[resource]
+script = ExtResource("2_6g4vd")
+card_name = "scaredGoblin"
+card_texture = ExtResource("1_w5r4s")
+base_health = 2
+metadata/_custom_type_script = "uid://dgobdlobxoext"

@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="CardData" format=3 uid="uid://b5d02fufsuxpv"]
+
+[ext_resource type="Texture2D" uid="uid://cgnw14ba3rfle" path="res://cards/cardMake/res/Grillston/Grillston.png" id="1_wn28u"]
+[ext_resource type="Script" uid="uid://dgobdlobxoext" path="res://card_data.gd" id="2_6g4vd"]
+
+[resource]
+script = ExtResource("2_6g4vd")
+card_name = "Grillston"
+card_texture = ExtResource("1_wn28u")
+base_attack = 5
+base_health = 6
+rarity = "Rare"
+metadata/_custom_type_script = "uid://dgobdlobxoext"

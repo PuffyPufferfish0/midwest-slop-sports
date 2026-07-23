@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="CardData" format=3 uid="uid://bciptm842wgoa"]
+
+[ext_resource type="Texture2D" uid="uid://0umvwhgvykxq" path="res://cards/cardMake/res/SleepyGnome/SleepyGnome.png" id="1_bx6m7"]
+[ext_resource type="Script" uid="uid://dgobdlobxoext" path="res://card_data.gd" id="2_f86ja"]
+
+[resource]
+script = ExtResource("2_f86ja")
+card_name = "SleepyGnome"
+card_texture = ExtResource("1_bx6m7")
+base_attack = 2
+base_health = 4
+metadata/_custom_type_script = "uid://dgobdlobxoext"

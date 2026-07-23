@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="CardData" format=3 uid="uid://u4yp034j7gyv"]
+
+[ext_resource type="Texture2D" uid="uid://btlqur26r85a7" path="res://cards/cardMake/res/wizard/wizard.png" id="1_2by6v"]
+[ext_resource type="Script" uid="uid://dgobdlobxoext" path="res://card_data.gd" id="2_6g4vd"]
+
+[resource]
+script = ExtResource("2_6g4vd")
+card_name = "wizard"
+card_texture = ExtResource("1_2by6v")
+base_attack = 10
+base_health = 4
+rarity = "Legendary"
+metadata/_custom_type_script = "uid://dgobdlobxoext"

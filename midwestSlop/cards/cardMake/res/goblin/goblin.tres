@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="CardData" format=3 uid="uid://dobd112v84k8p"]
+
+[ext_resource type="Texture2D" uid="uid://ka7vhbejlyo6" path="res://cards/cardMake/res/goblin/goblin.png" id="1_4545o"]
+[ext_resource type="Script" uid="uid://dgobdlobxoext" path="res://card_data.gd" id="2_6g4vd"]
+
+[resource]
+script = ExtResource("2_6g4vd")
+card_name = "goblin"
+card_texture = ExtResource("1_4545o")
+base_attack = 2
+base_health = 2
+metadata/_custom_type_script = "uid://dgobdlobxoext"

@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="CardData" format=3 uid="uid://b3ghr3pte3hag"]
+
+[ext_resource type="Texture2D" uid="uid://cwt0eqj1f2h4x" path="res://cards/cardMake/res/snowball/snowball.png" id="1_8oao3"]
+[ext_resource type="Script" uid="uid://dgobdlobxoext" path="res://card_data.gd" id="2_6g4vd"]
+
+[resource]
+script = ExtResource("2_6g4vd")
+card_name = "snowball"
+card_texture = ExtResource("1_8oao3")
+base_attack = 4
+rarity = "Uncommon"
+metadata/_custom_type_script = "uid://dgobdlobxoext"

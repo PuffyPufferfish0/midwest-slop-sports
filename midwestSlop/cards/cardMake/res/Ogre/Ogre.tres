@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="CardData" format=3 uid="uid://crd32pi2m7wpm"]
+
+[ext_resource type="Texture2D" uid="uid://df517kbkfprtv" path="res://cards/cardMake/res/Ogre/Ogre.png" id="1_crjyk"]
+[ext_resource type="Script" uid="uid://dgobdlobxoext" path="res://card_data.gd" id="2_6g4vd"]
+
+[resource]
+script = ExtResource("2_6g4vd")
+card_name = "Ogre"
+card_texture = ExtResource("1_crjyk")
+base_attack = 4
+base_health = 6
+rarity = "Uncommon"
+metadata/_custom_type_script = "uid://dgobdlobxoext"

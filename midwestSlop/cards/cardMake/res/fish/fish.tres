@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="CardData" format=3 uid="uid://dmvginjnhpepo"]
+
+[ext_resource type="Texture2D" uid="uid://cmuy0lkao65o4" path="res://cards/cardMake/res/fish/fish.png" id="1_gr7qo"]
+[ext_resource type="Script" uid="uid://dgobdlobxoext" path="res://card_data.gd" id="2_6g4vd"]
+
+[resource]
+script = ExtResource("2_6g4vd")
+card_name = "fish"
+card_texture = ExtResource("1_gr7qo")
+metadata/_custom_type_script = "uid://dgobdlobxoext"
