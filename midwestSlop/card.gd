@@ -2,21 +2,20 @@ extends Area3D
 
 @export var data: CardData
 
-var current_health: int
-var current_attack: int
 
 # Visual Nodes
 @onready var card_art = $blank_card/CardArt
-
+@export var owner_seat: int = 1
 @onready var attack_label_bottom = $blank_card/AttackLabelBottom
 @onready var health_label_bottom = $blank_card/HealthLabelBottom
-
 @onready var attack_label_top = $blank_card/AttackLabelTop
 @onready var health_label_top = $blank_card/HealthLabelTop
 
 var is_dragging: bool = false
 var drag_plane_y: float = 0.0
 var base_y: float = 0.0
+var current_health: int
+var current_attack: int
 
 func _ready():
 	if data:

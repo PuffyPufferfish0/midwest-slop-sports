@@ -24,7 +24,7 @@
 [ext_resource type="Script" uid="uid://c5ayewovvtd54" path="res://scenes/cooler.gd" id="19_c6pm6"]
 [ext_resource type="Texture2D" uid="uid://dkglmpc0yy68w" path="res://basic_beach_cooler_0.png" id="19_pibwh"]
 [ext_resource type="Texture2D" uid="uid://cly65pk8vyee6" path="res://basic_beach_cooler_1.png" id="20_c6pm6"]
-[ext_resource type="Resource" uid="uid://dmvginjnhpepo" path="res://cards/cardMake/res/fish/fish.tres" id="20_chjal"]
+[ext_resource type="Resource" uid="uid://drmiydi0o04ua" path="res://cards/cardMake/res/chillyGnome/chillyGnome.tres" id="20_cjqg0"]
 [ext_resource type="Texture2D" uid="uid://dsoh8miaeygv8" path="res://basic_beach_cooler_2.png" id="21_5he1u"]
 [ext_resource type="PackedScene" uid="uid://qo47b38boigf" path="res://cards/cornLegs.glb" id="22_1v6qk"]
 [ext_resource type="PackedScene" uid="uid://cvl8gh6e2g1kc" path="res://wooden_table.glb" id="23_augu2"]
@@ -1957,8 +1957,23 @@ surface_material_override/0 = SubResource("StandardMaterial3D_5poiv")
 transform = Transform3D(-1.3113418e-09, 0, 0.030000005, 0, 0.030000007, 0, -0.030000005, 0, -1.3113418e-09, -0.27832353, 0.5308999, -0.036114693)
 
 [node name="Card2" parent="Level/picnic_table" unique_id=2112233731 instance=ExtResource("18_2cjbq")]
-transform = Transform3D(-1.3113418e-09, 0, 0.030000009, 0, 0.03000001, 0, -0.030000009, 0, -1.3113418e-09, 0.30138993, 0.5308999, -0.036114693)
-data = ExtResource("20_chjal")
+transform = Transform3D(-1.3113418e-09, 0, 0.03000001, 0, 0.03000001, 0, -0.03000001, 0, -1.3113418e-09, 0.29253158, 0.5308999, -0.036114693)
+data = ExtResource("20_cjqg0")
+owner_seat = 2
+
+[node name="Player1HealthLabel" type="Label3D" parent="Level/picnic_table" unique_id=2111054447]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0.52, 0.25)
+double_sided = false
+modulate = Color(0.27038196, 0.62971586, 0.80582553, 1)
+text = "30"
+font_size = 20
+
+[node name="Player2HealthLabel" type="Label3D" parent="Level/picnic_table" unique_id=2082832190]
+transform = Transform3D(-1, 8.742278e-08, 3.821371e-15, 0, -4.371139e-08, 1, 8.742278e-08, 1, 4.371139e-08, 0, 0.52, -0.25)
+double_sided = false
+modulate = Color(1, 0.25490198, 0.20784314, 1)
+text = "30"
+font_size = 20
 
 [node name="House" parent="Level" unique_id=1232587246 instance=ExtResource("17_bu4jf")]
 process_physics_priority = 1

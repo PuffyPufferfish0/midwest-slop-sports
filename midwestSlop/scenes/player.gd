@@ -28,7 +28,7 @@ var proposed_wager: int = 0
 var opponent_wager: int = 0
 var opponent_peer_id: int = 0
 var wager_locked_in: bool = false
-
+var inventory: Array[CardData] = []
 var bag_scene = preload("res://cornhole_bag.tscn")
 
 @onready var score_ui = $CanvasLayer/ScoreUI
@@ -52,7 +52,11 @@ var bag_scene = preload("res://cornhole_bag.tscn")
 
 func _enter_tree():
 	set_multiplayer_authority(str(name).to_int())
-
+	
+func add_card_to_inventory(new_card: CardData):
+	inventory.append(new_card)
+	print("Added " + new_card.card_name + " to inventory! Total cards: ", inventory.size())
+	
 func _ready():
 	if not is_multiplayer_authority():
 		$CanvasLayer.hide() 
