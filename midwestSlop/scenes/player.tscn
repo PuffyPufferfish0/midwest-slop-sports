@@ -179,7 +179,7 @@ metadata/_tab_index = 3
 layout_mode = 0
 offset_right = 8.0
 offset_bottom = 8.0
-text = "Buy Pack(10 Caps)"
+text = "Buy Pack [1 Caps]"
 
 [node name="CapsLabel" type="Label" parent="CanvasLayer/InventoryPopup" unique_id=1869260110]
 layout_mode = 1
@@ -312,6 +312,7 @@ metadata/_tab_index = 0
 visible = false
 layout_mode = 2
 mouse_filter = 1
+text = "to play cards, you must first buy a booster pack! "
 metadata/_tab_index = 1
 
 [node name="Cornhole" type="RichTextLabel" parent="CanvasLayer/NotebookPopup/TabContainer" unique_id=128848705]

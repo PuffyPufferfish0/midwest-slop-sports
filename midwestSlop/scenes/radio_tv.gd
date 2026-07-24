@@ -12,6 +12,8 @@ func interact(player):
 	if player.has_method("open_media_menu"):
 		player.open_media_menu(self)
 
+# --- ADDED RPC TAG HERE ---
+@rpc("any_peer", "call_local", "reliable")
 func play_media(file_path: String):
 	audio_player.stop()
 	video_player.stop()
@@ -34,6 +36,8 @@ func play_media(file_path: String):
 		video_player.stream = media
 		video_player.play()
 
+# --- ADDED RPC TAG HERE ---
+@rpc("any_peer", "call_local", "reliable")
 func stop_media():
 	audio_player.stop()
 	video_player.stop()
@@ -41,6 +45,7 @@ func stop_media():
 	mp3_bg.visible = false
 	mp3_label.text = ""
 
+# (Left this local so everyone can set their own volume!)
 func set_volume(vol_linear: float):
 	var db = linear_to_db(vol_linear)
 	audio_player.volume_db = db

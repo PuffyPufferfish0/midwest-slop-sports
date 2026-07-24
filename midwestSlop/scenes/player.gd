@@ -326,15 +326,18 @@ func populate_song_list():
 
 func _on_song_selected(file_name: String):
 	if current_radio and current_radio.has_method("play_media"):
-		current_radio.play_media("res://music/" + file_name)
+		# Switched to .rpc() to broadcast the file to everyone!
+		current_radio.rpc("play_media", "res://music/" + file_name)
 	close_media_menu()
 
 func _on_stop_pressed():
 	if current_radio and current_radio.has_method("stop_media"):
-		current_radio.stop_media()
+		# Switched to .rpc() to stop it for everyone!
+		current_radio.rpc("stop_media")
 
 func _on_volume_changed(value: float):
 	if current_radio and current_radio.has_method("set_volume"):
+		# Kept this local so each player controls their own audio levels!
 		current_radio.set_volume(value)
 
 func _on_yes_button_pressed():
