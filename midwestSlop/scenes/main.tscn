@@ -2303,7 +2303,7 @@ script = ExtResource("30_xhfw6")
 source_viewport = NodePath("../../radio/RadioTV/SubViewport")
 
 [node name="lawnchair" parent="Level/ProjectorScreen" unique_id=1974999604 instance=ExtResource("31_1epgm")]
-transform = Transform3D(-2.9140924e-08, 0, -0.6666667, 0, 0.6666667, 0, 0.6666667, 0, -2.9140924e-08, 22.4735, -2.873389, 13.343558)
+transform = Transform3D(-2.9140924e-08, 0, -0.6666667, 0, 0.6666667, 0, 0.6666667, 0, -2.9140924e-08, 22.714794, -2.873389, 13.098305)
 
 [node name="topwoodScreen" type="CSGBox3D" parent="Level" unique_id=1208214430]
 transform = Transform3D(17.235783, 0, 0, 0, 0.39999998, 0, 0, 0, 0.5, -0.23355103, 9.645228, 24.078302)

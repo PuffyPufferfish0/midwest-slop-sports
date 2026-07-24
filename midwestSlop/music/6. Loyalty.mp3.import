@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://db014rioqp0fc"
+path="res://.godot/imported/6. Loyalty.mp3-3830e6a5c92478e7c590b1b1821bca13.mp3str"
+
+[deps]
+
+source_file="res://music/6. Loyalty.mp3"
+dest_files=["res://.godot/imported/6. Loyalty.mp3-3830e6a5c92478e7c590b1b1821bca13.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

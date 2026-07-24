@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://cjwqtwkn55b4p"
+path="res://.godot/imported/1. Crumbling Castle.mp3-243dd5de6b564e1ec0e445cda350b48a.mp3str"
+
+[deps]
+
+source_file="res://music/1. Crumbling Castle.mp3"
+dest_files=["res://.godot/imported/1. Crumbling Castle.mp3-243dd5de6b564e1ec0e445cda350b48a.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

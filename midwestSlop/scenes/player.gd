@@ -308,8 +308,9 @@ func populate_song_list():
 			child.queue_free()
 			
 	var added_songs = []
+	var music_dir = get_external_music_dir()
 	
-	var dir = DirAccess.open("res://music")
+	var dir = DirAccess.open(music_dir)
 	if dir:
 		dir.list_dir_begin()
 		var file_name = dir.get_next()
@@ -323,16 +324,20 @@ func populate_song_list():
 						added_songs.append(clean_name)
 						var btn = Button.new()
 						btn.text = clean_name
-						btn.pressed.connect(_on_song_selected.bind(clean_name))
+						
+						# --- CHANGED: Pass the absolute file path to the network ---
+						var full_path = music_dir.path_join(clean_name)
+						btn.pressed.connect(_on_song_selected.bind(full_path))
+						
 						song_list.add_child(btn)
 			file_name = dir.get_next()
 
-func _on_song_selected(file_name: String):
+func _on_song_selected(file_path: String):
 	if current_radio and current_radio.has_method("play_media"):
-		# Switched to .rpc() to broadcast the file to everyone!
-		current_radio.rpc("play_media", "res://music/" + file_name)
+		# Broadcast the exact path so the peers know what to load
+		current_radio.rpc("play_media", file_path)
 	close_media_menu()
-
+	
 func _on_stop_pressed():
 	if current_radio and current_radio.has_method("stop_media"):
 		# Switched to .rpc() to stop it for everyone!
@@ -765,3 +770,17 @@ func open_arcade():
 	# Instantiate the 2D UI overlay
 	current_arcade_game = bean_run_scene.instantiate()
 	$CanvasLayer.add_child(current_arcade_game)
+
+func get_external_music_dir() -> String:
+	if OS.has_feature("editor"):
+		# Use the internal folder while testing in the Godot engine
+		return "res://music"
+	else:
+		# Find the directory where the .exe is running
+		var path = OS.get_executable_path().get_base_dir().path_join("music")
+		
+		# Auto-create the folder so players know where to put their songs!
+		if not DirAccess.dir_exists_absolute(path):
+			DirAccess.make_dir_absolute(path)
+			
+		return path

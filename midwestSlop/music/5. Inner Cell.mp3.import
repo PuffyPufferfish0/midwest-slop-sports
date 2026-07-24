@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://xv67urhr5d02"
+path="res://.godot/imported/5. Inner Cell.mp3-f41ae1f58bc33bb7e8689d3e3f458c71.mp3str"
+
+[deps]
+
+source_file="res://music/5. Inner Cell.mp3"
+dest_files=["res://.godot/imported/5. Inner Cell.mp3-f41ae1f58bc33bb7e8689d3e3f458c71.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4
