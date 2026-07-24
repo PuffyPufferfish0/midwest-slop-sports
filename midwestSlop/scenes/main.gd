@@ -1,13 +1,16 @@
 extends Node
 
 const PORT = 8910
-const IP_ADDRESS = "127.0.0.1" # Localhost
+const IP_ADDRESS = "127.0.0.1"
 
 @onready var host_button = $MainMenu/CanvasLayer/HostButton
 @onready var join_button = $MainMenu/CanvasLayer/JoinButton
 @onready var level = $Level
 @onready var spawn_point = $Level/SpawnPoint
 @onready var menu_music = $MainMenu/CanvasLayer/Node2D/MenuMusic
+@onready var cricket_audio = $Level/cricketAudio
+@onready var cricket_timer = $Level/CricketTimer
+
 var player_scene = preload("res://scenes/player.tscn")
 
 var is_steam_active: bool = false
@@ -32,7 +35,6 @@ func _process(_delta):
 	if is_steam_active:
 		Steam.run_callbacks()
 
-# --- LOCAL ENET SYSTEM (For quick offline testing) ---
 
 func _on_host_local_pressed():
 	var peer = ENetMultiplayerPeer.new()
@@ -49,7 +51,6 @@ func _on_join_local_pressed():
 	
 	_start_game()
 
-# --- STEAM SYSTEM (For live multiplayer) ---
 
 func host_steam_game():
 	if is_steam_active:
@@ -84,8 +85,6 @@ func _on_steam_lobby_joined(lobby_id: int, permissions: int, locked: bool, respo
 		
 		_start_game()
 
-# --- GAMEPLAY LOGIC ---
-# THE FIX: Only let the host spawn the physical characters!
 func _on_peer_connected(id: int):
 	if multiplayer.is_server():
 		_add_player(id)
@@ -104,8 +103,16 @@ func _start_game():
 	var title_cam = get_node_or_null("MainMenu/Camera3D")
 	if title_cam:
 		title_cam.current = false
-func _on_throwing_zone_body_entered(body: Node3D) -> void:
-	pass
+		
+	start_next_cricket()
 
-func _on_throwing_zone_body_exited(body: Node3D) -> void:
-	pass
+
+func start_next_cricket():
+	var random_time = randf_range(3.0, 30.0)
+	
+	cricket_timer.start(random_time)
+
+func _on_cricket_timer_timeout():
+	cricket_audio.play()
+	
+	start_next_cricket()

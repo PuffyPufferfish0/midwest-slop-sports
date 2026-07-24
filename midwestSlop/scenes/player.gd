@@ -32,6 +32,9 @@ var opponent_peer_id: int = 0
 var wager_locked_in: bool = false
 var inventory: Array[CardData] = []
 var bag_scene = preload("res://cornhole_bag.tscn")
+var bean_run_scene = preload("res://cards/bean_run_minigame.tscn")
+var current_arcade_game = null
+
 
 @onready var cards_grid = $CanvasLayer/InventoryPopup/TabContainer/Cards/ScrollContainer/CardsGrid
 @onready var score_ui = $CanvasLayer/ScoreUI
@@ -341,6 +344,9 @@ func _on_volume_changed(value: float):
 		current_radio.set_volume(value)
 
 func _on_yes_button_pressed():
+	if current_arcade_game:
+		current_arcade_game.queue_free()
+		current_arcade_game = null
 	quit_popup.visible = false
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	
@@ -748,3 +754,14 @@ func sync_spawn_deck(card_paths: Array, card_names: Array, owner_seat_id: int, t
 		# The 180-degree flip is preserved so they face the owner
 		new_card.global_rotation = Vector3(deg_to_rad(-90), target_seat.global_rotation.y + deg_to_rad(180), 0)
 		new_card.scale = Vector3(0.03, 0.03, 0.03)
+		
+func open_arcade():
+	if current_arcade_game != null: return
+	
+	is_playing_minigame = true
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	if crosshair: crosshair.visible = false
+	
+	# Instantiate the 2D UI overlay
+	current_arcade_game = bean_run_scene.instantiate()
+	$CanvasLayer.add_child(current_arcade_game)

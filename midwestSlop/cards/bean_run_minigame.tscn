@@ -1,0 +1,53 @@
+[gd_scene format=3 uid="uid://j3cpp2x8tcvy"]
+
+[ext_resource type="Script" uid="uid://cg2tlyofk0odu" path="res://cards/bean.gd" id="1_1gqem"]
+[ext_resource type="Texture2D" uid="uid://t53emit0qnu1" path="res://bean.png" id="1_a8ug2"]
+[ext_resource type="Script" uid="uid://byrlx2cs32ryr" path="res://cards/bean_run_minigame.gd" id="1_iejvy"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_2282s"]
+size = Vector2(1161, 20)
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_2282s"]
+radius = 54.0
+height = 170.0
+
+[node name="BeanRunMinigame" type="Node2D" unique_id=1128995046]
+script = ExtResource("1_iejvy")
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=1362477529]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.37028223, 0.43724993, 0.54100996, 1)
+
+[node name="Ground" type="StaticBody2D" parent="." unique_id=2044621499]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Ground" unique_id=1674616050]
+position = Vector2(570.5, 600)
+shape = SubResource("RectangleShape2D_2282s")
+
+[node name="ColorRect" type="ColorRect" parent="Ground/CollisionShape2D" unique_id=416875039]
+offset_left = -585.5
+offset_top = -8.0
+offset_right = 596.5
+offset_bottom = 56.0
+color = Color(0.2231029, 0.2231029, 0.22310287, 1)
+
+[node name="Bean" type="CharacterBody2D" parent="." unique_id=1348542081]
+script = ExtResource("1_1gqem")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Bean" unique_id=12035480]
+position = Vector2(67, 500)
+shape = SubResource("CapsuleShape2D_2282s")
+
+[node name="Sprite2D" type="Sprite2D" parent="Bean/CollisionShape2D" unique_id=2144316574]
+position = Vector2(-1, -4)
+texture = ExtResource("1_a8ug2")
+
+[node name="Timer" type="Timer" parent="." unique_id=10495518]
+wait_time = 1.5
+autostart = true
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
