@@ -1,9 +1,8 @@
 # Game List
-- Corn Hole
-- Disc Golf
-- Eucher
-- Beers!
+- arcade
+- cornhole
+- card (yet to be named)
 
-![gif1](midwestslop1.gif)
-![gif2](midwestslop2.gif)
+# Music
+make sure you have a `music` folder in the directory where your executable lives
 
