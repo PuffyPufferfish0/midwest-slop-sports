@@ -19,19 +19,16 @@
 [ext_resource type="PackedScene" uid="uid://cxiiequwbpr2r" path="res://round_table.glb" id="16_bjg73"]
 [ext_resource type="PackedScene" uid="uid://cm0d5tyhhkmlu" path="res://snap_point.tscn" id="17_5poiv"]
 [ext_resource type="PackedScene" uid="uid://lbh8e00a0x3x" path="res://house.tscn" id="17_bu4jf"]
-[ext_resource type="PackedScene" uid="uid://dfu2h3bl33tj4" path="res://card.tscn" id="18_2cjbq"]
-[ext_resource type="PackedScene" uid="uid://8vky5axm8nww" path="res://discGolf.fbx" id="18_o7ddy"]
 [ext_resource type="Script" uid="uid://c5ayewovvtd54" path="res://scenes/cooler.gd" id="19_c6pm6"]
 [ext_resource type="Texture2D" uid="uid://dkglmpc0yy68w" path="res://basic_beach_cooler_0.png" id="19_pibwh"]
 [ext_resource type="Texture2D" uid="uid://cly65pk8vyee6" path="res://basic_beach_cooler_1.png" id="20_c6pm6"]
-[ext_resource type="Resource" uid="uid://drmiydi0o04ua" path="res://cards/cardMake/res/chillyGnome/chillyGnome.tres" id="20_cjqg0"]
 [ext_resource type="Texture2D" uid="uid://dsoh8miaeygv8" path="res://basic_beach_cooler_2.png" id="21_5he1u"]
+[ext_resource type="Script" uid="uid://dti3afpxg7opo" path="res://scenes/health_target.gd" id="21_cjqg0"]
 [ext_resource type="PackedScene" uid="uid://qo47b38boigf" path="res://cards/cornLegs.glb" id="22_1v6qk"]
 [ext_resource type="PackedScene" uid="uid://cvl8gh6e2g1kc" path="res://wooden_table.glb" id="23_augu2"]
 [ext_resource type="PackedScene" uid="uid://ch45gie4snxmj" path="res://cigar_ashtray_used.glb" id="24_tm6hj"]
 [ext_resource type="PackedScene" uid="uid://b8o8ruma2tfyl" path="res://scenes/beer_bottle.glb" id="25_kf5aa"]
 [ext_resource type="Script" uid="uid://cmq3wa5ntb0qo" path="res://scenes/throwing_zone.gd" id="26_5he1u"]
-[ext_resource type="PackedScene" uid="uid://cargtfsxqcgb" path="res://scenes/d1_prodigy_disc_golf_disc.glb" id="26_t5ykj"]
 [ext_resource type="PackedScene" uid="uid://dw8n6w1pnokmh" path="res://vintage_1984_samsung_bt-123aj_portable_5_2k.glb" id="27_e755i"]
 [ext_resource type="Script" uid="uid://dapbs4u86c883" path="res://scenes/radio_tv.gd" id="28_ro3en"]
 [ext_resource type="PackedScene" uid="uid://j55ekowduwjs" path="res://projector_screen_low_poly.glb" id="29_od4ux"]
@@ -42,7 +39,7 @@
 [ext_resource type="PackedScene" uid="uid://bdm1g03wx6tvk" path="res://rusty_japanese_arcade.glb" id="35_c6pm6"]
 [ext_resource type="Script" uid="uid://bdr2bc5x6xl8a" path="res://cameraPan.gd" id="35_mlv25"]
 [ext_resource type="PackedScene" uid="uid://iur7cmqxtufr" path="res://xiaomi_wanbo_projector_t2_max.glb" id="36_a82wo"]
-[ext_resource type="AudioStream" uid="uid://k2auwm2bytnw" path="res://scenes/gamejamAmbiance.mp3" id="37_c6pm6"]
+[ext_resource type="AudioStream" uid="uid://cg7hm2eg4ogc3" path="res://gamejamAmbiance.mp3" id="41_chjal"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_a8gtg"]
 albedo_texture = ExtResource("2_fuf3a")
@@ -1327,6 +1324,8 @@ metallic = 0.53
 transparency = 1
 albedo_color = Color(1, 0.42745098, 1, 0.5921569)
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_0xyya"]
+
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_w1wq0"]
 resource_name = "BumpyWhite"
 cull_mode = 2
@@ -1953,16 +1952,6 @@ transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 0, -0.07736771, 0)
 mesh = SubResource("TorusMesh_2282s")
 surface_material_override/0 = SubResource("StandardMaterial3D_5poiv")
 
-[node name="Card" parent="Level/picnic_table" unique_id=265594081 instance=ExtResource("18_2cjbq")]
-transform = Transform3D(-1.3113418e-09, 0, 0.030000005, 0, 0.030000007, 0, -0.030000005, 0, -1.3113418e-09, -0.27832353, 0.5308999, -0.036114693)
-visible = false
-
-[node name="Card2" parent="Level/picnic_table" unique_id=2112233731 instance=ExtResource("18_2cjbq")]
-transform = Transform3D(-1.3113418e-09, 0, 0.03000001, 0, 0.03000001, 0, -0.03000001, 0, -1.3113418e-09, 0.29253158, 0.5308999, -0.036114693)
-visible = false
-data = ExtResource("20_cjqg0")
-owner_seat = 2
-
 [node name="Player1HealthLabel" type="Label3D" parent="Level/picnic_table" unique_id=2111054447]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0.52, 0.25)
 double_sided = false
@@ -1977,18 +1966,28 @@ modulate = Color(1, 0.25490198, 0.20784314, 1)
 text = "30"
 font_size = 20
 
+[node name="Area3D" type="Area3D" parent="Level/picnic_table" unique_id=462097026]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.6)
+collision_layer = 2
+script = ExtResource("21_cjqg0")
+target_seat = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Level/picnic_table/Area3D" unique_id=835742420]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
+shape = SubResource("BoxShape3D_0xyya")
+
+[node name="Area3D2" type="Area3D" parent="Level/picnic_table" unique_id=276567465]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.2)
+collision_layer = 2
+script = ExtResource("21_cjqg0")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Level/picnic_table/Area3D2" unique_id=508029927]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
+shape = SubResource("BoxShape3D_0xyya")
+
 [node name="House" parent="Level" unique_id=1232587246 instance=ExtResource("17_bu4jf")]
 process_physics_priority = 1
 transform = Transform3D(3.0145202, 0, -2.629196, 0, 4, 0, 2.629196, 0, 3.0145202, 20.428234, -2, -20.324144)
-
-[node name="discGolf" parent="Level" unique_id=713443673 instance=ExtResource("18_o7ddy")]
-transform = Transform3D(1.7793413, 0, 0.9132056, 0, 2, 0, -0.9132056, 0, 1.7793413, -15.086454, 0.08728552, -17.65634)
-
-[node name="discGolf2" parent="Level" unique_id=866938270 instance=ExtResource("18_o7ddy")]
-transform = Transform3D(-1.8451726, 0, 0.7715815, 0, 2, 0, -0.7715815, 0, -1.8451726, -17.697126, 0.08728552, 11.831423)
-
-[node name="discGolf3" parent="Level" unique_id=1955382397 instance=ExtResource("18_o7ddy")]
-transform = Transform3D(-0.50714684, 0, -1.9346324, 0, 2, 0, 1.9346324, 0, -0.50714684, 17.655262, 0.08728552, 16.417917)
 
 [node name="cooler" type="StaticBody3D" parent="Level" unique_id=347456355]
 transform = Transform3D(-0.24691813, 0, -0.5468376, 0, 0.6, 0, 0.5468376, 0, -0.24691813, 7.054894, -3.2405417, -10.818874)
@@ -2118,9 +2117,6 @@ transform = Transform3D(0.00087545894, 0, -0.00492276, 0, 0.005, 0, 0.00492276, 
 [node name="beer" parent="Level" unique_id=2047914891 instance=ExtResource("25_kf5aa")]
 transform = Transform3D(0.01, 0, 0, 0, 0.01, 0, 0, 0, 0.01, 1.4716475, -0.15131342, -15.37973)
 
-[node name="disc" parent="Level" unique_id=1502440843 instance=ExtResource("26_t5ykj")]
-transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, -4.733681, 0.9952549, -14.244762)
-
 [node name="radio" parent="Level" unique_id=619534406 instance=ExtResource("27_e755i")]
 transform = Transform3D(-1.5580205, 0, -2.563703, 0, 3, 0, 2.563703, 0, -1.5580205, 21.555773, 1.1037056, -7.3574715)
 
@@ -2238,8 +2234,8 @@ bbcode_enabled = true
 text = "Midwest Slop!!"
 
 [node name="MenuMusic" type="AudioStreamPlayer2D" parent="MainMenu/CanvasLayer/Node2D" unique_id=234475934]
-stream = ExtResource("37_c6pm6")
-volume_db = -19.015
+stream = ExtResource("41_chjal")
+volume_db = -10.0
 autoplay = true
 
 [node name="JoinButton" type="Button" parent="MainMenu/CanvasLayer" unique_id=1302060587]

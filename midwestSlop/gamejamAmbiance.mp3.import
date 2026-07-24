@@ -13,7 +13,7 @@ dest_files=["res://.godot/imported/gamejamAmbiance.mp3-4a232a1d23c10da8fa79cb924
 [params]
 
 loop=false
-loop_offset=0
-bpm=0
-beat_count=0
+loop_offset=0.0
+bpm=150.0
+beat_count=162
 bar_beats=4

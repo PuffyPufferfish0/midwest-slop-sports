@@ -611,52 +611,60 @@ func update_inventory_ui():
 
 func open_deck_builder():
 	active_deck.clear()
+	selected_deck_buttons.clear() 
+	
 	deck_popup.visible = true
-	confirm_deck_btn.disabled = true
+	
+	confirm_deck_btn.disabled = false
+	confirm_deck_btn.text = "Spawn Deck (0/3)"
 	
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	if crosshair: crosshair.visible = false
 	
-	# Clear old buttons
 	for child in deck_grid.get_children():
 		child.queue_free()
 		
-	# Create a clickable button for every card in inventory
 	for card in inventory:
 		var btn = TextureButton.new()
 		
-		# IMPORTANT: Use the exact variable name you found in card_data.gd (e.g., card.art)
 		btn.texture_normal = card.card_texture
+		 
 		
 		btn.ignore_texture_size = true
 		btn.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
 		btn.custom_minimum_size = Vector2(80, 120)
 		
-		# Connect the click event and pass the specific card and button
 		btn.pressed.connect(func(): _on_deck_card_toggled(card, btn))
 		deck_grid.add_child(btn)
 
+func end_card_game(is_winner: bool):
+	# 1. Announce the result using your existing notification popup
+	if is_winner:
+		show_notification("VICTORY! You defeated your opponent!")
+	else:
+		show_notification("DEFEAT! You were crushed...")
+		
+	# 2. Clear out the active deck tracking so the next game starts fresh
+	active_deck.clear()
+	selected_deck_buttons.clear()
+	
+	# 3. Fire your existing "leave table" logic to instantly teleport them out of the chair
+	_on_yes_button_pressed()
+	
 func _on_deck_card_toggled(card: CardData, btn: TextureButton):
-	# Check if this specific BUTTON is already selected
 	if selected_deck_buttons.has(btn):
 		selected_deck_buttons.erase(btn)
-		
-		# Safely remove only ONE instance of this card from the active deck
 		active_deck.remove_at(active_deck.find(card)) 
-		btn.modulate = Color(1, 1, 1, 1) # Return to normal color
+		btn.modulate = Color(1, 1, 1, 1) 
 	else:
 		if active_deck.size() < 3:
 			selected_deck_buttons.append(btn)
 			active_deck.append(card)
-			btn.modulate = Color(0.5, 1, 0.5, 1) # Tint green
+			btn.modulate = Color(0.5, 1, 0.5, 1) 
 			
-	if active_deck.size() == 3:
-		confirm_deck_btn.disabled = false
-		confirm_deck_btn.text = "Spawn Deck!"
-	else:
-		confirm_deck_btn.disabled = true
-		confirm_deck_btn.text = "Choose 3 (" + str(active_deck.size()) + "/3)"
-		
+	confirm_deck_btn.disabled = false
+	confirm_deck_btn.text = "Spawn Deck (" + str(active_deck.size()) + "/3)"
+	
 func _on_confirm_deck_pressed():
 	deck_popup.visible = false
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED

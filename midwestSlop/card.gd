@@ -172,4 +172,29 @@ func sync_take_damage(amount: int):
 
 @rpc("any_peer", "call_local", "reliable")
 func sync_destroy():
+	var dying_owner = owner_seat
 	queue_free()
+	
+	# Only the client who owned the card needs to check for a wiped board
+	var my_seat = get_local_seat_number()
+	if dying_owner == my_seat:
+		# Wait one frame to ensure the dying card officially leaves the 3D world
+		await get_tree().process_frame 
+		
+		var my_cards_alive = 0
+		var all_areas = get_tree().current_scene.find_children("*", "Area3D", true, false)
+		
+		# Count all remaining cards that belong to this local player
+		for c in all_areas:
+			if c.has_method("initialize_card") and c.get("owner_seat") == my_seat and not c.is_queued_for_deletion():
+				my_cards_alive += 1
+				
+		print("Card died! Remaining cards for seat ", my_seat, ": ", my_cards_alive)
+		
+		# If the board is wiped, find the local player node and reopen the menu!
+		if my_cards_alive == 0:
+			var all_bodies = get_tree().current_scene.find_children("*", "CharacterBody3D", true, false)
+			for body in all_bodies:
+				if body.has_method("open_deck_builder") and body.is_multiplayer_authority():
+					body.open_deck_builder()
+					break
