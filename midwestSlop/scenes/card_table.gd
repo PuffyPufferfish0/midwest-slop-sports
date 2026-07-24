@@ -10,7 +10,6 @@ var selected_attacker: Area3D = null
 
 func handle_card_clicked(clicked_card: Area3D, clicker_seat: int):
 	if selected_attacker == null:
-		# RULE 1: You can only select YOUR OWN card as an attacker
 		if clicked_card.owner_seat == clicker_seat:
 			selected_attacker = clicked_card
 			selected_attacker.set_selected(true)
@@ -24,7 +23,6 @@ func handle_card_clicked(clicked_card: Area3D, clicker_seat: int):
 		print("Attacker deselected.")
 		
 	else:
-		# RULE 2: You can only target the OPPONENT'S card to deal damage
 		if clicked_card.owner_seat != clicker_seat:
 			print("Target chosen: ", clicked_card.data.card_name)
 			resolve_combat(selected_attacker, clicked_card)
@@ -42,7 +40,6 @@ func resolve_combat(attacker: Area3D, defender: Area3D):
 	
 	if overflow > 0:
 		print("Card died! Player ", defender.owner_seat, " takes ", overflow, " damage.")
-		# Route the overflow to the defender's owner
 		rpc("sync_player_damage", defender.owner_seat, overflow)
 		defender.rpc("sync_destroy")
 		
@@ -54,7 +51,6 @@ func resolve_combat(attacker: Area3D, defender: Area3D):
 		print("Card survived!")
 		defender.rpc("sync_take_damage", damage)
 
-# --- NETWORK SYNC FOR PLAYER HEALTH ---
 @rpc("any_peer", "call_local", "reliable")
 func sync_player_damage(seat_id: int, damage: int):
 	if seat_id == 1:
@@ -64,7 +60,6 @@ func sync_player_damage(seat_id: int, damage: int):
 		player_2_hp -= damage
 		p2_label.text = str(player_2_hp)
 		
-	# --- CHECK FOR GAME OVER ---
 	if player_1_hp <= 0 or player_2_hp <= 0:
 		var winner_seat = 2 if player_1_hp <= 0 else 1
 		trigger_game_over(winner_seat)
@@ -82,7 +77,6 @@ func trigger_game_over(winner_seat: int):
 			var did_i_win = (my_seat == winner_seat)
 			p.end_card_game(did_i_win)
 			
-	# Reset the table's health for the next match
 	player_1_hp = 30
 	player_2_hp = 30
 	p1_label.text = str(30)
@@ -97,7 +91,6 @@ func handle_player_targeted(target_seat: int, clicker_seat: int):
 		print("You cannot attack yourself!")
 		return
 		
-	# 1. Count if the opponent has any cards left on the table
 	var opponent_cards_alive = 0
 	var all_areas = get_tree().current_scene.find_children("*", "Area3D", true, false)
 	
@@ -105,12 +98,10 @@ func handle_player_targeted(target_seat: int, clicker_seat: int):
 		if c.has_method("initialize_card") and c.get("owner_seat") == target_seat and not c.is_queued_for_deletion():
 			opponent_cards_alive += 1
 			
-	# 2. Block the attack if they still have defenders!
 	if opponent_cards_alive > 0:
 		print("Attack Blocked! Opponent still has ", opponent_cards_alive, " cards on the board.")
 		return
 		
-	# 3. DIRECT ATTACK!
 	var damage = selected_attacker.current_attack
 	print("Direct Attack! Player ", target_seat, " takes ", damage, " damage.")
 	

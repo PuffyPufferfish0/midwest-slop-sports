@@ -1,6 +1,5 @@
 extends Area3D
 
-# Change this to 1 for Player 1's health Area3D, and 2 for Player 2's!
 @export var target_seat: int = 1
 
 func get_local_seat_number() -> int:
@@ -24,7 +23,7 @@ func _input(event):
 			ray_query.from = active_cam.project_ray_origin(mouse_pos)
 			ray_query.to = ray_query.from + active_cam.project_ray_normal(mouse_pos) * 1000.0
 			ray_query.collide_with_areas = true 
-			ray_query.collision_mask = 2 # Matches your card layer
+			ray_query.collision_mask = 2
 			
 			var space_state = get_world_3d().direct_space_state
 			var result = space_state.intersect_ray(ray_query)

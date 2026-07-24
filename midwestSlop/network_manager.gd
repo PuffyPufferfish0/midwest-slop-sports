@@ -33,7 +33,6 @@ func _process(_delta):
 	if is_steam_active:
 		Steam.run_callbacks()
 
-# --- HOSTING ---
 
 func host_game(use_steam: bool):
 	if use_steam and is_steam_active:
@@ -63,7 +62,6 @@ func _on_steam_lobby_created(connect: int, lobby_id: int):
 		lobby_created.emit(lobby_id)
 		get_tree().change_scene_to_file("res://main.tscn")
 
-# --- JOINING ---
 
 func join_local_game(ip_address: String = LOCAL_IP):
 	var peer = ENetMultiplayerPeer.new()
@@ -90,7 +88,6 @@ func _on_steam_lobby_joined(lobby_id: int, permissions: int, locked: bool, respo
 		lobby_joined.emit(lobby_id)
 		get_tree().change_scene_to_file("res://main.tscn")
 
-# --- LOBBY BROWSER ---
 
 func request_steam_lobby_list():
 	if is_steam_active:

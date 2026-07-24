@@ -340,12 +340,10 @@ func _on_song_selected(file_path: String):
 	
 func _on_stop_pressed():
 	if current_radio and current_radio.has_method("stop_media"):
-		# Switched to .rpc() to stop it for everyone!
 		current_radio.rpc("stop_media")
 
 func _on_volume_changed(value: float):
 	if current_radio and current_radio.has_method("set_volume"):
-		# Kept this local so each player controls their own audio levels!
 		current_radio.set_volume(value)
 
 func _on_yes_button_pressed():
@@ -574,54 +572,41 @@ func bag_thrown(bag: Node3D):
 func update_score_ui(p1_score: int, p2_score: int):
 	if score_ui:
 		score_ui.text = "Player 1: " + str(p1_score) + " | Player 2: " + str(p2_score)
-# --- SHOP & INVENTORY LOGIC ---
 
 func _on_buy_pack_pressed():
 	if bottle_caps >= pack_cost:
-		# 1. Deduct the caps and update the UI
 		bottle_caps -= pack_cost
 		update_caps_display()
 		
-		# 2. Roll 3 random cards
 		var pulled_cards = []
 		for i in range(3):
-			# This assumes you created the CardDatabase Autoload from earlier!
 			var random_card = CardDatabase.get_random_card()
 			pulled_cards.append(random_card)
 			add_card_to_inventory(random_card)
 			
-		# 3. Show the player what they got using your notification system
 		var result_text = "Pack Opened: " + pulled_cards[0].card_name + ", " + pulled_cards[1].card_name + ", " + pulled_cards[2].card_name
 		show_notification(result_text)
 		print(result_text)
 		update_inventory_ui()
 	else:
-		# Broke!
 		show_notification("Not enough caps! You need " + str(pack_cost) + " to buy a pack.")
 func update_inventory_ui():
 	if not cards_grid: return
 	
-	# 1. Clear out the old UI elements so we don't duplicate them
 	for child in cards_grid.get_children():
 		child.queue_free()
 		
-	# 2. Loop through your actual inventory array
 	for card in inventory:
 		var card_img = TextureRect.new()
 		
-		# IMPORTANT: Change "card_texture" to whatever the image variable 
-		# is actually named inside your CardData resource script!
 		card_img.texture = card.card_texture
 		
-		# 3. Format the image so it fits neatly in the grid
 		card_img.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		card_img.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		card_img.custom_minimum_size = Vector2(80, 120) # Adjust based on your art's aspect ratio
+		card_img.custom_minimum_size = Vector2(80, 120)
 		
-		# 4. Add it to the grid
 		cards_grid.add_child(card_img)
 		
-# --- DECK SELECTION LOGIC ---
 
 func open_deck_builder():
 	active_deck.clear()
@@ -652,17 +637,14 @@ func open_deck_builder():
 		deck_grid.add_child(btn)
 
 func end_card_game(is_winner: bool):
-	# 1. Announce the result using your existing notification popup
 	if is_winner:
 		show_notification("VICTORY! You defeated your opponent!")
 	else:
 		show_notification("DEFEAT! You were crushed...")
 		
-	# 2. Clear out the active deck tracking so the next game starts fresh
 	active_deck.clear()
 	selected_deck_buttons.clear()
 	
-	# 3. Fire your existing "leave table" logic to instantly teleport them out of the chair
 	_on_yes_button_pressed()
 	
 func _on_deck_card_toggled(card: CardData, btn: TextureButton):
@@ -703,7 +685,6 @@ func _on_confirm_deck_pressed():
 	var table_path_str = ""
 	
 	if current_station:
-		# Capture the absolute path as a raw string so it never fails over the network!
 		table_path_str = str(current_station.get_path())
 		
 		if current_station.get("player_2") == self:
@@ -713,14 +694,12 @@ func _on_confirm_deck_pressed():
 	
 @rpc("any_peer", "call_local", "reliable")
 func sync_spawn_deck(card_paths: Array, card_names: Array, owner_seat_id: int, table_path_str: String):
-	# 1. Instantly find the exact table using the foolproof text path
 	var station = get_node_or_null(table_path_str)
 	
 	if not station:
 		print("ERROR: Opponent could not find the table at path: ", table_path_str)
 		return
 		
-	# 2. Find the exact physical seat node to guarantee perfectly synced math
 	var target_seat = station.get_node_or_null("seat_position_" + str(owner_seat_id))
 	if not target_seat:
 		print("ERROR: Could not find seat_position_" + str(owner_seat_id))
@@ -739,24 +718,19 @@ func sync_spawn_deck(card_paths: Array, card_names: Array, owner_seat_id: int, t
 		if new_card.has_method("initialize_card"):
 			new_card.initialize_card()
 			
-		# --- BULLETPROOF SYNCHRONIZED MATH ---
 		var table_center = station.global_position
 		
-		# Draw a line from the table center to the exact seat position
 		var dir_to_seat = (target_seat.global_position - table_center).normalized()
 		dir_to_seat.y = 0 
 		
-		# Push the cards 0.6 meters from the center toward the seat
 		var base_pos = table_center + (dir_to_seat * 0.6)
 		base_pos.y = table_center.y + 0.85 
 		
-		# Calculate "right" based on the seat's transform so spacing is correct
 		var right = target_seat.global_transform.basis.x.normalized()
 		var spacing = (i - 1) * 0.35 
 		
 		new_card.global_position = base_pos + (right * spacing)
 		
-		# The 180-degree flip is preserved so they face the owner
 		new_card.global_rotation = Vector3(deg_to_rad(-90), target_seat.global_rotation.y + deg_to_rad(180), 0)
 		new_card.scale = Vector3(0.03, 0.03, 0.03)
 		
@@ -767,19 +741,15 @@ func open_arcade():
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	if crosshair: crosshair.visible = false
 	
-	# Instantiate the 2D UI overlay
 	current_arcade_game = bean_run_scene.instantiate()
 	$CanvasLayer.add_child(current_arcade_game)
 
 func get_external_music_dir() -> String:
 	if OS.has_feature("editor"):
-		# Use the internal folder while testing in the Godot engine
 		return "res://music"
 	else:
-		# Find the directory where the .exe is running
 		var path = OS.get_executable_path().get_base_dir().path_join("music")
 		
-		# Auto-create the folder so players know where to put their songs!
 		if not DirAccess.dir_exists_absolute(path):
 			DirAccess.make_dir_absolute(path)
 			

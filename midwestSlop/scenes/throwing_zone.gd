@@ -33,7 +33,7 @@ func interact_with_shape(player: Node3D, shape_idx: int) -> void:
 		else:
 			return
 
-	var target_pos = global_position # Fallback to the zone center
+	var target_pos = global_position
 	var owner_id = shape_find_owner(shape_idx)
 	var clicked_shape_node = shape_owner_get_owner(owner_id)
 	

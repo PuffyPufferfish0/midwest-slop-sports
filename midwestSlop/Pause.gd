@@ -1,7 +1,6 @@
 extends Control
 
 func _ready() -> void:
-	#start hidden
 	hide()
 	
 func _input(event: InputEvent) -> void: 

@@ -116,7 +116,6 @@ func sync_throw(impulse: Vector3):
 	if thrower and thrower.has_method("bag_thrown"):
 		thrower.bag_thrown(self)
 
-# --- INTERACTION SYSTEM ---
 
 func get_interact_prompt() -> String:
 	if is_thrown:

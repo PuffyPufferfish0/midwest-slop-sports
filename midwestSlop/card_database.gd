@@ -1,6 +1,5 @@
 extends Node
 
-# Drag and drop all your CardData .tres files into this array
 var all_cards: Array[CardData] = [
 	preload("res://cards/cardMake/res/chillyGnome/chillyGnome.tres"),
 	preload("res://cards/cardMake/res/dragon/dragon.tres"),

@@ -34,7 +34,6 @@ func join_game(player, seat_number):
 	
 	player.current_station = self 
 	
-	# ---> ADD THIS LINE <---
 	player.open_deck_builder()
 	
 	var cam = player.get_node("SpringArm3D/Camera3D")

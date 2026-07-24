@@ -71,7 +71,7 @@ albedo_texture = ExtResource("4_c6pm6")
 uv1_scale = Vector3(0.2, 0.2, 0.2)
 uv1_triplanar = true
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_vchkt"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_txyw0"]
 render_priority = 0
 shader = ExtResource("5_5he1u")
 shader_parameter/albedo = Color(1, 1, 1, 1)
@@ -1719,7 +1719,7 @@ size = Vector3(50, 4, 50)
 material = SubResource("StandardMaterial3D_85g3d")
 
 [node name="SimpleGrassTextured" type="MultiMeshInstance3D" parent="Level" unique_id=1059472916]
-material_override = SubResource("ShaderMaterial_vchkt")
+material_override = SubResource("ShaderMaterial_txyw0")
 multimesh = SubResource("MultiMesh_jkv2x")
 script = ExtResource("8_chjal")
 roughness = 0.32
